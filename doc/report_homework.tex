@@ -115,7 +115,7 @@ and MAE estimators on a dataset with 1 outlier. Explain the difference between t
   \end{exercise}
 
 \begin{exercise}{2}
-In case of high-dimensional inputs (d > N), it makes sense to seek a sparse
+(5 points) In case of high-dimensional inputs (d > N), it makes sense to seek a sparse
 parameter vector $\theta$. This means that many components of $\theta$ should be zero. The non-zero components of $\theta$ then correspond to the key features or key inputs that have a significant impact on the outputs. Sparsity can be induced by adding an L1-penalty to the objective function of Eq.~\ref{eq:mse} or Eq.~\ref{eq:mae}, which yields the least absolute
 shrinkage and selection operator (LASSO) method of regression analysis. In case of the MAE objective, the resulting LASSO estimator satisfies:
 \begin{equation}\label{eq:lasso}
