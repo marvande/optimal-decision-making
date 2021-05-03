@@ -272,6 +272,50 @@ Solving the linear program with Python, we obtain  the following result : $x_1 =
 %We want to define $y$ and $z$ so they are feasible solutions and $x^* = \frac{1}{2} (y + z) $ which contradicts the fact that $x^* $ is an extreme point. 
 \end{exercise}
   
+  
+  \begin{exercise}{6}
+  Write the convex hull of the adversary's feasible set using a finite set of (in-)equalities on $z_i$. Note that k is an integer. Explain why your formulation is indeed the convex hull.
+  
+  \textit{Answer :}
+  
+
+\begin{equation*}
+\begin{array}{lll@{}lll}
+\min\limits_{\theta}&\max\limits_{z_1,...,z_N}  &\frac{1}{k}\displaystyle\sum\limits_{i=1}^{N}z_i|y^{(i)} - \theta^\top x^{(i)}| +  \lambda||\theta||_1 &\\
+\text{subject to} 
+&& \displaystyle\sum\limits_{i=1}^{N}z_i = k  && \\
+                \\
+                && z_i \in  \{ 0, 1 \}   & \forall i \in [ N ]& 
+\end{array}
+\end{equation*}
+
+
+Lets write the dual of the inner minimization problem : 
+
+\begin{equation*}
+\begin{array}{lll@{}lll}
+&\max\limits_{z_1,...,z_N}  &\frac{1}{k}\displaystyle\sum\limits_{i=1}^{N}z_i|y^{(i)} - \theta^\top x^{(i)}|  &\\
+\text{subject to} 
+&& \displaystyle\sum\limits_{i=1}^{N}z_i = k  &&  \\
+                \\
+                && z_i \in  \{ 0, 1 \}   & \forall i \in [ N ]& 
+\end{array}
+\end{equation*}
+
+We get : 
+
+\begin{equation*}
+\begin{array}{lll@{}lll}
+&\min\limits_{\alpha}   & \alpha k   &\\
+\text{subject to} 
+
+&&  \alpha \geq |y^{(i)} - \theta^\top x^{(i)}|  &&  i=1 ,\dots, N \\
+                \\
+                && \alpha    & unconstrained& 
+\end{array}
+\end{equation*}
+  
+  \end{exercise}
 
   \section*{Appendix}
 \newpage  
