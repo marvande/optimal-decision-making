@@ -291,6 +291,17 @@ The only decision attributed to the player (the one who is trying to save his mo
 
 To summarize, the constraints can be expressed as
 
+\begin{equation}
+\begin{array}{ll@{}lll}
+
+\displaystyle\sum\limits_{i=1}^{I} x_i = C && i=1 ,\dots, I \\
+&& x_i \leq C_i && i=1 ,\dots, I\\
+
+\end{array}
+\end{equation}
+
+
+
 
 Part 2:
 
@@ -304,6 +315,31 @@ The two decision variables attributed to the adversary, in this case the robber 
 \end{itemize}
 
 To summarized, the two constraints can be expressed as:
+
+
+Part 3:
+
+\textit{Answer}
+The problem can be written as the min-max problem below:
+
+\begin{equation}
+\begin{array}{ll@{}lll}
+\text{min}_x\ \text{max}_y\ && \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
+
+\text{subject to} 
+&& \displaystyle\sum\limits_{i=1}^{I} x_i = C && i=1 ,\dots, I \\
+&& x_i \leq C_i && i=1 ,\dots, I\\
+&& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T &&  i=1 ,\dots, I \\
+                && z_i p_i \leq 1  &&  i=1 ,\dots, I\\
+                && x,y &\geq 0\\ 
+
+
+
+\end{array}
+\end{equation}
+
+
+
 
 \end{exercise}
 
