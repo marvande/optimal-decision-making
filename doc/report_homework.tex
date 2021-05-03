@@ -272,6 +272,37 @@ Solving the linear program with Python, we obtain  the following result : $x_1 =
 %We want to define $y$ and $z$ so they are feasible solutions and $x^* = \frac{1}{2} (y + z) $ which contradicts the fact that $x^* $ is an extreme point. 
 \end{exercise}
   
+  
+
+\begin{exercise}{5}
+(20 points)
+Part 1: Characterize your decisions variables and feasible set
+
+\textit{Answer}
+The only decision attributed to the player (the one who is trying to save his money) is how much money to put into each hiding spot $x_i$. The amount of money placed in each hiding spot must be subjected to two different constraints:
+
+\begin{itemize}
+    \item the amount of money in hiding spot \textit{i} cannot exceed the maximum amount of money that can be hidden in this spot $C_i$.
+    \item the total amount of money hidden in all spots must be equal to the total amount of money the player has, i.e. must be equal to C.
+\end{itemize}
+
+To summarize, the constraints can be expressed as
+
+
+Part 2:
+
+\textit{Answer}
+
+The two decision variables attributed to the adversary, in this case the robber (the one who is trying to take the money from the player) is how much time to put into searching for money, and where to spend this time. However, since these two variables are redundant, they can be condensed to one, which is the time spent searching for money, represented by the variable $z_i$. The time spent searching for money has two different constraints:
+
+\begin{itemize}
+    \item The total amount of time spent searching for money must not exceed the time \textit{T} needed for the police to arrive to the house.
+    \item The time spent in one area multiplied by the area's search difficulty factor p cannot exceed 1. If it equals 1, it means all of the money in that spot has been found.
+\end{itemize}
+
+To summarized, the two constraints can be expressed as:
+
+\end{exercise}
 
   \section*{Appendix}
 \newpage  
