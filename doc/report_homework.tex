@@ -324,14 +324,14 @@ The problem can be written as the min-max problem below:
 
 \begin{equation}
 \begin{array}{ll@{}lll}
-\text{min}_x\ \text{max}_y\ && \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
+\text{min}_x\ \text{max}_z\ && \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
 
 \text{subject to} 
-&& \displaystyle\sum\limits_{i=1}^{I} x_i = C && i=1 ,\dots, I \\
+&& \displaystyle\sum\limits_{i=1}^{I} x_i = C\\
 && x_i \leq C_i && i=1 ,\dots, I\\
-&& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T &&  i=1 ,\dots, I \\
+&& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T \\
                 && z_i p_i \leq 1  &&  i=1 ,\dots, I\\
-                && x,y &\geq 0\\ 
+                && x,z &\geq 0\\ 
 
 
 
@@ -339,7 +339,35 @@ The problem can be written as the min-max problem below:
 \end{equation}
 
 
+Part 4:
 
+\textit{Answer}
+Assuming that we keep the outer minimization constant while resolving the inner maximization problem, we can keep x constant. Thus, we can reformulate the maximization as follows:
+
+\begin{equation}
+\begin{array}{ll@{}lll}
+\text{max}_y\ && \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
+
+\text{subject to} 
+&& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T &&  i=1 ,\dots, I \\
+                && z_i p_i \leq 1  &&  i=1 ,\dots, I\\
+                && z\ \geq 0\\ 
+
+\end{array}
+\end{equation}
+
+To write the dual problem, we take the dual variable y. The problem can be dualized as follows:
+
+\begin{equation}
+\begin{array}{ll@{}lll}
+\text{min}_y\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} \frac{1}{p_i} y_i\\
+
+\text{subject to} 
+&& y_i + y_{I+1} \leq x_i p_i  &&  i=1 ,\dots, I\\
+&& y_i\ \leq 0 && i=1 ,\dots, I+1\\ 
+
+\end{array}
+\end{equation}
 
 \end{exercise}
 
