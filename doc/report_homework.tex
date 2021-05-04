@@ -12,6 +12,7 @@
 \usepackage{multicol}
 \usepackage{marginnote}
 \usepackage{pgfplots}
+\setlength{\parindent}{0cm}
 
 \usepackage{comment}
 
@@ -171,6 +172,7 @@ To rewrite this in standard form we introduce slack variables $s,t,u,v$:
 
 \end{exercise}
 
+\section{Convex Hulls}
 \begin{exercise}{3}
 
 (5 points). Denote by $X$ the feasible set of problem (4). Write the
@@ -276,7 +278,7 @@ Solving the linear program with Python, we obtain  the following result : $x_1 =
 \end{exercise}
   
   
-
+ \section{Zero-Sum Games}
 \begin{exercise}{5}
 (20 points)
 Part 1: Characterize your decisions variables and feasible set
@@ -372,12 +374,51 @@ To write the dual problem, we take the dual variable y. The problem can be duali
 \end{exercise}
 
   
-  
+ \section{Adversarial Training}
   \begin{exercise}{6}
-  Write the convex hull of the adversary's feasible set using a finite set of (in-)equalities on $z_i$. Note that k is an integer. Explain why your formulation is indeed the convex hull.
+  Write the convex hull of the adversary's feasible set 
+  \begin{equation}
+      Z  =\Bigg \{ z\in \mathbb{R}^N: \sum_{i=1}^{N}z_i = k, z_i \in \{0,1\} \;\forall i\in[N]\Bigg \}
+  \end{equation}
   
-  \textit{Answer :}
+  using a finite set of (in-)equalities on $z_i$. Note that k is an integer. Explain why your formulation is indeed the convex hull.
+
+  \textit{Answer:} First of all, we notice that all feasible points (and thus the convex hull) must be in the positive quadrant of $\mathbb{R}^N$ due to the coordinates of $z$ being $z_i \in \{0,1\}$. Furthermore, in the extreme case when $k=N$ then the only feasible point is $z_i = 1^N\in\mathbb{R}^N$ (the vector that is one everywhere). So, in the case of $k=N$, the convex hull is just the point itself (convex by definition). Another special case is when $k=1$ and the vectors $z$ are just the unit vectors $e_i \in\mathbb{R}^N$. In that case, the convex hull is given by the shape delimited by the unit vectors (a line in 2D and a triangle in 3D, Fig.~\ref{fig:convex-hull}). 
   
+ \begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{doc/images/IMG_0038.jpg}
+  \caption{Figure 1: Convex hull of feasible set in 2D and 3D in the case where $k=1$.}
+  \vspace{-3mm}
+  \label{fig:convex-hull}
+\end{figure}
+ 
+ For the more general case, we first note that, due to the combinatorial properties of the solutions $z\in\mathbb{R}^N$, the set of feasible solutions is finite i.e., because $z$ have to satisfy $\sum_{i=1}^{N}z_i = k$, there is only a finite number of possibilities assuming $N$ is finite. By Weyl's theorem~\cite{rockafellar1970convex}\cite{QUEYRANNE19921}, the convex hull of $Z$ is a convex polyhedron and can thus be defined by a finite set of linear inequalities.
+ 
+ We define the convex hull by $conv(Z)= \{ z \in\mathbb{R}^N | Az\leq b, z_i \geq 0 \}$ where $A \in\mathbb{R}^{2xN} = \begin{pmatrix}
+1 & 1 & ... & 1\\
+-1 & 1 & ... & -1
+\end{pmatrix}$ and $ b = \begin{pmatrix}k\\-k
+\end{pmatrix}$. So, the vertices of the convex hull are the extreme points of the feasible set of the Integer Linear Problem ILP:
+
+\begin{equation}
+\begin{array}{l@{}llll}
+&&\text{min}_\theta F(\theta, z)\\
+\text{subject to} 
+&& \displaystyle\sum_{i=1}^{N}z_i &\leq k & i=1 ,\dots, N \\
+&& -\displaystyle\sum_{i=1}^{N}z_i &\leq -k & i=1 ,\dots, N  \\
+&& z_i \in \{0,1\} && i=1 ,\dots, N 
+\end{array}
+\end{equation}
+where $F(\theta, z) = max_{z_1, ...z_N} \displaystyle\frac{1}{k} \sum_{i=1}^{N}z_i|y^i-\theta^Tx^i|+\lambda || \theta||_1$. 
+The convex hull as defined above has a finite number of constraints because its bounded by the number of constraints in the ILP, which is finite. The hull is convex by definition of the feasible region. 
+
+
+Notes:
+- linear integer program (LIP), an optimal integer solution is also optimal over the
+convex hull of all integer feasible solutions,
+
+
 \begin{comment}
 
 
@@ -424,7 +465,11 @@ We get :
   \section*{Appendix}
 \newpage  
  \begin{thebibliography}{9}
-
+\bibitem{rockafellar1970convex} 
+Rockafellar, R Tyrrell: Convex analysis, 1970, volume 36, Princeton university press
+\bibitem{QUEYRANNE19921} 
+M. Queyranne and Y. Wang: On the convex hull of feasible solutions to certain combinatorial problems, 1992, volume 11, Operations Research Letters
+\\\texttt{https://www.sciencedirect.com/science/article/pii/0167637792900558}
 \end{thebibliography}
  
 \end{document}
