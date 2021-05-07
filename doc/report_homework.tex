@@ -359,6 +359,7 @@ Assuming that we keep the outer minimization constant while resolving the inner 
 \end{array}
 \end{equation}
 
+The problem becomes a maximization problem centered on the variable z, which is the time allocated by the thief to searching each spot.
 To write the dual problem, we take the dual variable y. The problem can be dualized as follows:
 
 \begin{equation}
@@ -366,11 +367,13 @@ To write the dual problem, we take the dual variable y. The problem can be duali
 \text{min}_y\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} \frac{1}{p_i} y_i\\
 
 \text{subject to} 
-&& y_i + y_{I+1} \leq x_i p_i  &&  i=1 ,\dots, I\\
-&& y_i\ \leq 0 && i=1 ,\dots, I+1\\ 
+&& y_i + y_{I+1} \geq x_i p_i  &&  i=1 ,\dots, I\\
+&& y_i\ \geq 0 && i=1 ,\dots, I+1\\ 
 
 \end{array}
 \end{equation}
+
+This problem finds the upper bound to the optimal time the thief can take.
 
 \end{exercise}
 
