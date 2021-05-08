@@ -271,7 +271,7 @@ Using the convex hull, we get the following linear program :
 
 Solving the linear program with Python, we obtain  the following result : $x_1 =  0.0$ and $x_2 = 1.0$
 
-I this case, the extreme points of conv(D) have integer coordinates. MILP can be solved by finding an extreme point solution to CMILP
+I this case, the extreme points of $conv(D)$ have integer coordinates. MILP can be solved by finding an extreme point solution to CMILP
 
 %Let $x^{\*}$ be an extreme point %% Ore BSF, need to check 
 %Suppose towards contradiction that there exist a BFS $x^*$ that is not binary. So that exists $x_i^*$ s.t $0< x_i^* < 1 $ 
@@ -359,6 +359,7 @@ Assuming that we keep the outer minimization constant while resolving the inner 
 \end{array}
 \end{equation}
 
+The problem becomes a maximization problem centered on the variable z, which is the time allocated by the thief to searching each spot.
 To write the dual problem, we take the dual variable y. The problem can be dualized as follows:
 
 \begin{equation}
@@ -366,11 +367,13 @@ To write the dual problem, we take the dual variable y. The problem can be duali
 \text{min}_y\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} \frac{1}{p_i} y_i\\
 
 \text{subject to} 
-&& y_i + y_{I+1} \leq x_i p_i  &&  i=1 ,\dots, I\\
-&& y_i\ \leq 0 && i=1 ,\dots, I+1\\ 
+&& y_i + y_{I+1} \geq x_i p_i  &&  i=1 ,\dots, I\\
+&& y_i\ \geq 0 && i=1 ,\dots, I+1\\ 
 
 \end{array}
 \end{equation}
+
+This problem finds the upper bound to the optimal time the thief can take.
 
 \end{exercise}
 
@@ -419,9 +422,15 @@ Notes:
 - linear integer program (LIP), an optimal integer solution is also optimal over the
 convex hull of all integer feasible solutions,
 
+ \end{exercise}
+ 
+ 
+\begin{exercise}{7}
 
-\begin{comment}
+\begin{enumerate}
+    \item 
 
+We want to transform the following Min-Max problem. 
 
 \begin{equation*}
 \begin{array}{lll@{}lll}
@@ -434,11 +443,12 @@ convex hull of all integer feasible solutions,
 \end{equation*}
 
 
-Lets write the dual of the inner minimization problem : 
+First, using the solution from Question 3, lets write the dual of the inner minimization problem using the same logic : 
+
 
 \begin{equation*}
 \begin{array}{lll@{}lll}
-&\max\limits_{z_1,...,z_N}  &\frac{1}{k}\displaystyle\sum\limits_{i=1}^{N}z_i|y^{(i)} - \theta^\top x^{(i)}|  &\\
+&\max\limits_{z_1,...,z_N}  &\frac{1}{k}\displaystyle\sum\limits_{i=1}^{N}z_i|y^{(i)} - \theta^\top x^{(i)}| +  \lambda||\theta||_1 &\\
 \text{subject to} 
 && \displaystyle\sum\limits_{i=1}^{N}z_i = k  &&  \\
                 \\
@@ -446,22 +456,56 @@ Lets write the dual of the inner minimization problem :
 \end{array}
 \end{equation*}
 
-We get : 
+With $p_i$  replaced by $ 1 / k$ and $T$ replaced by $k$ making  $\beta_i$  unconstrained and changing the order of the constraint inequality because of the equality in the maximisation problem  . 
+
+The maximization problem is transformed into : 
 
 \begin{equation*}
 \begin{array}{lll@{}lll}
-&\min\limits_{\alpha}   & \alpha k   &\\
+&\min\limits_{y}   &  k\beta_{N + 1 }  + \sum\limits_{i=1}^{N}\beta_i  + \lambda||\theta||_1  &\\
 \text{subject to} 
 
-&&  \alpha \geq |y^{(i)} - \theta^\top x^{(i)}|  &&  i=1 ,\dots, N \\
+&&  \beta_{N + 1 } + \beta_i   & \geq \frac{1}{k}|y^{(i)} - \theta^\top x^{(i)}| &  i=1 ,\dots, N \\
                 \\
-                && \alpha    & unconstrained& 
+                && y_i    & unconstrained& %% ?? Really unconstrained ? 
 \end{array}
 \end{equation*}
 
-\end{comment}
-  
-  \end{exercise}
+We then assigning $\beta_{N+1} = \alpha$, and as in Exercice 2, we use the fact that $|y_i - \theta^T x_i| \leq \beta_i$ is equivalent to $-\beta_i + \alpha < y_i - \theta^T x_i  < \beta_i + \alpha$ to rewrite the full linear program. 
+
+We also use the same principle for $|\theta_i|$ using $b_i$ as an auxiliary variable. 
+
+Finally, we obtain the following program : 
+
+\begin{equation*}
+\begin{array}{lll@{}lll}
+ \min\limits_{\theta, b_i} &\min\limits_{\beta. \alpha}   &  k\alpha  + \sum\limits_{i=1}^{N}\beta_i  + \lambda\sum\limits_{i=1}^{d} b_i   &\\
+\text{subject to} 
+
+&&  \alpha + \beta_i    & \geq \frac{ y^{(i)} - \theta^\top x^{(i)}}{k}&  i=1 ,\dots, N \\
+&&  \alpha + \beta_i    & \geq \frac{- y^{(i)} + \theta^\top x^{(i)}}{k} &  i=1 ,\dots, N \\
+                \\
+                && \beta_i    &  & \\ %% ?? Really unconstrained ? 
+                && - b_j \leq \theta_j \leq b_j & & j = 1 \dots, d
+\end{array}
+\end{equation*}
+
+Merging the two minimization we obtain the desired result. 
+
+
+
+\item \textit{Implement the linear program (8) in MATLAB or Python using the skeleton code we provide on Moodle and solve it for 50 logarithmically spaced values of in the interval. For each of these values compute the MAE of the corresponding estimator on the validation set, and select the best robust estimator. To assess the beneffts of robust cross validation over standard cross validation, compare the MAE of the robust estimator against the MEA of the estimator found in Question 2.3. In both cases the MEA should be computed on the test set.}
+
+
+
+
+\item \textit{For the robust estimator found above, compare also the MEA on the test set against the MEA on the training set. Is there a significant difference to what you observed in Question 2.3.? Interpret your observations?}
+
+
+We notice a significant difference between the MEA on the test set against the the Training Set. 
+\end{enumerate}
+
+ \end{exercise}
 
   \section*{Appendix}
 \newpage  
