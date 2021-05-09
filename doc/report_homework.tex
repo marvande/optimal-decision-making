@@ -349,7 +349,7 @@ Assuming that we keep the outer minimization constant while resolving the inner 
 
 \begin{equation}
 \begin{array}{ll@{}lll}
-\text{max}_y\ && \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
+\text{max}_z\ && \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
 
 \text{subject to} 
 && \displaystyle\sum\limits_{i=1}^{I} z_i \leq T &&  i=1 ,\dots, I \\
@@ -373,7 +373,12 @@ To write the dual problem, we take the dual variable y. The problem can be duali
 \end{array}
 \end{equation}
 
-This problem finds the upper bound to the optimal time the thief can take.
+This problem finds the upper bound to the optimal time the thief can take. The extra variable represents the total amount of money the thief can take, regardless of his strategy. Should the problem be implemented correctly, then all the y variables should be equal to zero and $y_{I+1}$ should be non-zero.\\
+
+
+Part 5:
+
+Upon implementing the modified problem, we get 
 
 
 \textit{Implement the resulting linear program in Python or MATLAB and solve it for the provided input data p;C 2 RI and T 2 R. Use the code skeletons available from Moodle. Report the worst amount of money you lose, the optimal plan for hiding the money and the thief 's optimal search strategy.}
