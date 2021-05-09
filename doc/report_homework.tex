@@ -375,6 +375,16 @@ To write the dual problem, we take the dual variable y. The problem can be duali
 
 This problem finds the upper bound to the optimal time the thief can take.
 
+
+\textit{Implement the resulting linear program in Python or MATLAB and solve it for the provided input data p;C 2 RI and T 2 R. Use the code skeletons available from Moodle. Report the worst amount of money you lose, the optimal plan for hiding the money and the thief 's optimal search strategy.}
+
+Solving the problem in Python, we get :
+\begin{itemize}
+    \item   Worst amount of money we lose : 
+    \item Optimal plan for hiding the money : 
+    \item  Thief 's optimal search strategy : 
+\end{itemize}
+
 \end{exercise}
 
   
@@ -467,7 +477,7 @@ The maximization problem is transformed into :
 
 &&  \beta_{N + 1 } + \beta_i   & \geq \frac{1}{k}|y^{(i)} - \theta^\top x^{(i)}| &  i=1 ,\dots, N \\
                 \\
-                && y_i    & unconstrained& %% ?? Really unconstrained ? 
+                && y_i    &  \geq 0 % unconstrained& %% ?? Really unconstrained ? 
 \end{array}
 \end{equation*}
 
@@ -485,7 +495,7 @@ Finally, we obtain the following program :
 &&  \alpha + \beta_i    & \geq \frac{ y^{(i)} - \theta^\top x^{(i)}}{k}&  i=1 ,\dots, N \\
 &&  \alpha + \beta_i    & \geq \frac{- y^{(i)} + \theta^\top x^{(i)}}{k} &  i=1 ,\dots, N \\
                 \\
-                && \beta_i    &  & \\ %% ?? Really unconstrained ? 
+                && \beta_i    & \geq 0  & \\ %% ?? Really unconstrained ? 
                 && - b_j \leq \theta_j \leq b_j & & j = 1 \dots, d
 \end{array}
 \end{equation*}
