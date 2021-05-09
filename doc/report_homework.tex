@@ -279,10 +279,11 @@ I this case, the extreme points of $conv(D)$ have integer coordinates. MILP can 
 \end{exercise}
   
   
- \section{Zero-Sum Games}
+\section{Zero-Sum Games}
 \begin{exercise}{5}
-(20 points)
-Part 1: Characterize your decisions variables and feasible set
+(20 points)\\
+
+Part 1: Characterize your decisions variables and feasible set.\\
 
 \textit{Answer}
 The only decision attributed to the player (the one who is trying to save his money) is how much money to put into each hiding spot $x_i$. The amount of money placed in each hiding spot must be subjected to two different constraints:
@@ -292,21 +293,21 @@ The only decision attributed to the player (the one who is trying to save his mo
     \item the total amount of money hidden in all spots must be equal to the total amount of money the player has, i.e. must be equal to C.
 \end{itemize}
 
-To summarize, the constraints can be expressed as
+To summarize, the constraints can be expressed as:
 
 \begin{equation}
 \begin{array}{ll@{}lll}
 
-\displaystyle\sum\limits_{i=1}^{I} x_i = C && i=1 ,\dots, I \\
-&& x_i \leq C_i && i=1 ,\dots, I\\
+\displaystyle\sum\limits_{i=1}^{I} x_i = C \\ \\
+x_i \leq C_i && i=1 ,\dots, I\\ \\
+x \geq 0
 
 \end{array}
 \end{equation}
 
 
 
-
-Part 2:
+Part 2:Characterize the thief’s decision variables and feasible set.
 
 \textit{Answer}
 
@@ -318,6 +319,15 @@ The two decision variables attributed to the adversary, in this case the robber 
 \end{itemize}
 
 To summarized, the two constraints can be expressed as:
+
+\begin{equation}
+\begin{array}{ll@{}lll}
+
+\displaystyle\sum\limits_{i=1}^{I} z_i \leq T \\ \\
+z_i p_i \leq C_i && i=1 ,\dots, I\\ \\
+z_i \geq 0
+\end{array}
+\end{equation}
 
 
 Part 3:
@@ -342,7 +352,7 @@ The problem can be written as the min-max problem below:
 \end{equation}
 
 
-Part 4:
+Part 4: Dualize the inner maximization problem to reformulate the MinMax prob- lem as a standard minimization problem, which can be addressed with lin- ear programming solvers. Hint: The decision variables of the outer mini- mization problem represent constants for the inner maximization problem.\\
 
 \textit{Answer}
 Assuming that we keep the outer minimization constant while resolving the inner maximization problem, we can keep x constant. Thus, we can reformulate the maximization as follows:
@@ -376,19 +386,45 @@ To write the dual problem, we take the dual variable y. The problem can be duali
 This problem finds the upper bound to the optimal time the thief can take. The extra variable represents the total amount of money the thief can take, regardless of his strategy. Should the problem be implemented correctly, then all the y variables should be equal to zero and $y_{I+1}$ should be non-zero.\\
 
 
-Part 5:
-
-Upon implementing the modified problem, we get 
+Part 5:Implement the resulting linear program in Python or MATLAB and solve it for the provided input data p, C \in \mathbb{R}^I and T \in \mathbb{R}. Use the code skeletons available from Moodle. Report the worst amount of money you lose, the optimal plan for hiding the money and the thief's optimal search strategy. Hint: Think about the meaning of the problem’s dual variables.
 
 
-\textit{Implement the resulting linear program in Python or MATLAB and solve it for the provided input data p;C 2 RI and T 2 R. Use the code skeletons available from Moodle. Report the worst amount of money you lose, the optimal plan for hiding the money and the thief 's optimal search strategy.}
+\textit{Answer}
 
-Solving the problem in Python, we get :
-\begin{itemize}
-    \item   Worst amount of money we lose : 
-    \item Optimal plan for hiding the money : 
-    \item  Thief 's optimal search strategy : 
-\end{itemize}
+Upon implementing the modified problem, we get the following results:
+
+\begin{equation}
+\begin{array}{ll@{}lll}
+x = \begin{pmatrix}
+2000\\
+1000\\
+2322.58064516\\
+1935.48387097\\
+1451.61290323\\
+1290.32258065\\
+\end{pmatrix} 
+\approx 
+\begin{pmatrix}
+2000\\
+1000\\
+2322.58\\
+1935.48\\
+1451.61\\
+1290.32\\
+\end{pmatrix}
+
+\\ \\
+
+y_{I+1} = 2322.5806451612902 \approx 2322.58
+\end{array}
+\end{equation}
+
+As seen, the value found by the dual problem is very close to the value of the money hidden in the third spot. This spot is also one of the two spots (along with spot 2) which can be searched in its entirety by the thief within the allocated time T without being caught by the police. Further analysis of this solution can show that searching a combination of these hiding spots still yields a maximum profit of 2322.58 dollars for the thief. For example, should the thief search the 5th spot completely and the last spot until time runs out, he would still end up with less than or equal to 2322.58 dollars.
+
+The optimal strategy for the thief would be to search position 3 completely (that is, until time runs out) to get the maximum amount of money.
+
+
+
 
 \end{exercise}
 
