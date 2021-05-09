@@ -512,7 +512,9 @@ Merging the two minimization we obtain the desired result.
 \item \textit{For the robust estimator found above, compare also the MEA on the test set against the MEA on the training set. Is there a significant difference to what you observed in Question 2.3.? Interpret your observations?}
 
 
-We notice a significant difference between the MEA on the test set against the the Training Set. 
+We notice a significant difference between the MEA on the test set against the the Training Set. In this adversarial training procedure, we force the outliers to be in the training set.  Thus, it is logical that the MAE of the trainig set is larger than that of the test set. In the previous question, the outliers were evenly distributed between the training and the test, and the model was therefore less robust. 
+
+
 \end{enumerate}
 
  \end{exercise}
