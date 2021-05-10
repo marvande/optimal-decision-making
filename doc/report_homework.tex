@@ -371,26 +371,27 @@ The problem can be written as the following:
 \text{subject to} 
 & \displaystyle\sum\limits_{i=1}^{I} x_i = C\\
 & \displaystyle\sum\limits_{i=1}^{I} z_i \leq T \\
-& x_i z_i p_i \leq C_i &&i=1 ,\dots, I\\
+& x_i \leq C_i \\
+& z_i p_i \leq 1 &&i=1 ,\dots, I\\
                 & x_i,z_i \geq 0 &&i=1 ,\dots, I
 \end{array}
 \end{equation}
-For this, we used the fact that the second constraint of Eq.~\ref{eq:thief} ($z_i p_i \leq 1$), can be combined with the second constraint of Eq.~\ref{eq:owner} ($x_i \leq C_i$) as $x_i z_i p_i \leq C_i$ because $x_i z_i p_i$ will be the maximal amount of money the thief will find at spot $i$. 
+
 \end{exercise}
 
 \begin{exercise}{5.4} (8 points)
 Dualise the inner maximisation problem to reformulate the MinMax problem as a standard minimisation problem, which can be addressed with linear programming solvers. Hint: The decision variables of the outer minimisation problem represent constants for the inner maximisation problem.
 
 \textit{Answer.}
-Assuming that we keep the outer minimisation constant while resolving the inner maximisation problem, we can keep x constant. Together with the other constant $p_i$, we write a new constant $u_i = p_ix_i$. Thus, we can reformulate the maximisation as follows:
+Assuming that we keep the outer minimisation constant while resolving the inner maximisation problem, we can keep x constant. Thus, we can reformulate the maximisation as follows:
 
 \begin{equation}
 \begin{array}{ll@{}lll}
-\displaystyle\max_{z} && \displaystyle\sum\limits_{i=1}^{I} u_iz_i\\
+\displaystyle\max_{z} && \displaystyle\sum\limits_{i=1}^{I} x_ip_iz_i\\
 
 \text{subject to} 
 && \displaystyle\sum\limits_{i=1}^{I} z_i \leq T &&  \\
-                && z_i u_i \leq C_i  &&  i=1 ,\dots, I\\
+                && z_i p_i \leq 1  &&  i=1 ,\dots, I\\
                 && z_i\ \geq 0 &&i=1 ,\dots, I\\ 
 
 \end{array}
@@ -407,13 +408,13 @@ We apply the formula that the dual (D) of the primal problem (P):
 
 \end{array}
 \end{equation}
-In our case, we write $z_i\in\mathbb{R}^{I}$ as our primal variable and $c^T = \begin{pmatrix}-u_1 & -u_2 & ... &-u_I\end{pmatrix} \in\mathbb{R}^{I}$ (the negative sign changes the max into a min so that we can go from the primal formulation and simplify calculations). Then  $b^T = \begin{pmatrix}T & C_1 & ... &C_I\end{pmatrix}\in\mathbb{R}^{I+1}$ and
+In our case, we write $z_i\in\mathbb{R}^{I}$ as our primal variable and $c^T = \begin{pmatrix}-x_1p_1 & -x_2p_2 & ... &-x_Ip_I\end{pmatrix} \in\mathbb{R}^{I}$ (the negative sign changes the max into a min so that we can go from the primal formulation and simplify calculations). Then  $b^T = \begin{pmatrix}T & 1 & ... &1\end{pmatrix}\in\mathbb{R}^{I+1}$ and
 \begin{equation*}
     A \in\mathbb{R}^{I+1xI} = \begin{pmatrix}
 1 & 1 & ... & 1\\
-u_1 & 0 & ... & 0 \\
-0 & u_2 & ... & 0 \\
-0 & 0& ... & u_I
+p_1 & 0 & ... & 0 \\
+0 & p_2 & ... & 0 \\
+0 & 0& ... & p_I
 \end{pmatrix}
 \end{equation*}
 
@@ -421,10 +422,10 @@ where the first row of $A$ are only $1$. From this, we can write the dual formul
 
 \begin{equation}
 \begin{array}{ll@{}lll}
-\displaystyle\min_{y}\ &&-Ty_{I+1} - \displaystyle\sum\limits_{i=1}^{I} C_iy_i\\
+\displaystyle\min_{y}\ &&-Ty_{I+1} - \displaystyle\sum\limits_{i=1}^{I} y_i\\
 
 \text{subject to} 
-&& y_{I+1} + u_iy_{i+1}\geq -u_i  &&  i=1 ,\dots, I\\
+&& y_{I+1} + p_iy_{i+1}\geq -x_ip_i  &&  i=1 ,\dots, I\\
 && y_i\ \geq 0 && i=1 ,\dots, I+1\\ 
 
 \end{array}
@@ -433,10 +434,10 @@ where the first row of $A$ are only $1$. From this, we can write the dual formul
 This problem can be re-written as the following maximisation problem:
 \begin{equation}
 \begin{array}{ll@{}lll}
-\displaystyle\max_{y}\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} C_iy_i\\
+\displaystyle\max_{y}\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} y_i\\
 
 \text{subject to} 
-&& -y_{I+1} - u_iy_{i+1}\leq u_i  &&  i=1 ,\dots, I\\
+&& -y_{I+1} - p_iy_{i+1}\leq x_ip_i  &&  i=1 ,\dots, I\\
 && y_i\ \geq 0 && i=1 ,\dots, I+1\\ 
 
 \end{array}
@@ -461,12 +462,9 @@ This problem finds the upper (\textbf{Lower bound non?}) bound to the optimal ti
 \end{equation}
 \end{exercise}
 
-\begin{exercise}{5.5}
-Implement the resulting linear program in Python or MATLAB and solve it for the provided input data $p, C \in \mathbb{R}^I$ and $T \in \mathbb{R}$. Use the code skeletons available from Moodle. Report the worst amount of money you lose, the optimal plan for hiding the money and the thief's optimal search strategy. Hint: Think about the meaning of the problem’s dual variables.
+\begin{exercise}{5.5} (3 points) Implement the resulting linear program in Python and solve it for the provided input data $p, C \in \mathbb{R}^I$ and $T \in \mathbb{R}$. Report the worst amount of money you lose, the optimal plan for hiding the money and the thief's optimal search strategy. 
 
-
-\textit{Answer}
-
+\textit{Answer.}
 Upon implementing the modified problem, we get the following results:
 
 \begin{equation}
