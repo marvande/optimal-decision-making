@@ -371,7 +371,7 @@ The problem can be written as the following:
 \text{subject to} 
 & \displaystyle\sum\limits_{i=1}^{I} x_i = C\\
 & \displaystyle\sum\limits_{i=1}^{I} z_i \leq T \\
-& x_i z_i p_i \leq C_i &&i=1 ,\dots, I\\
+& x_i \leq C_i &&i=1 ,\dots, I\\
                 & x_i,z_i \geq 0 &&i=1 ,\dots, I
 \end{array}
 \end{equation}
@@ -445,6 +445,44 @@ This problem can be re-written as the following maximisation problem:
 
 
 \textbf{Reponse Hugo:}
+
+By assuming that the outer variable (in this problem, x) is constant, we can remove the constraints associated to this variable. The inner maximization problem becomes:
+
+\begin{equation}
+\begin{array}{ll@{}llll}
+\displaystyle\max_{z} & \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
+\text{subject to} 
+& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T \\
+                & z_i \geq 0 &&i=1 ,\dots, I
+\end{array}
+\end{equation}
+
+Unlike previous examples, we are trying to find the dual of a maximization problem instead of the dual of a minimization problem. This means that we must follow the inverse path of dualization:
+
+\begin{equation}
+\begin{array}{lll@{}llllll}
+\text{(P)}  & \displaystyle\max_{y} &b^Ty\ && \text{(D)} & \displaystyle\min_{x}\ &c^Tx\\
+&\text{subject to} 
+&Ay\geq c &&&\text{subject to} &A^T x\leq b\\
+&&y\ \geq 0  &&&& x\ \geq 0\\ 
+
+\end{array}
+\end{equation}
+
+Here, the A matrix can be described as follows:
+
+\begin{equation*}
+    A \in\mathbb{R}^{I+1xI} = \begin{pmatrix}
+1 & 1 & ... & 1\\
+u_1 & 0 & ... & 0 \\
+0 & u_2 & ... & 0 \\
+0 & 0& ... & u_I
+\end{pmatrix}
+\end{equation*}
+
+
+
+
 This problem finds the upper (\textbf{Lower bound non?}) bound to the optimal time the thief can take. The extra variable represents the total amount of money the thief can take, regardless of his strategy. Should the problem be implemented correctly, then all the y variables should be equal to zero and $y_{I+1}$ should be non-zero.\\
 
 
