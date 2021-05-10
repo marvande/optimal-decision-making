@@ -445,10 +445,119 @@ This problem can be re-written as the following maximisation problem:
 
 
 
-\textbf{Reponse Hugo:}
-This problem finds the upper (\textbf{Lower bound non?}) bound to the optimal time the thief can take. The extra variable represents the total amount of money the thief can take, regardless of his strategy. Should the problem be implemented correctly, then all the y variables should be equal to zero and $y_{I+1}$ should be non-zero.\\
+\textbf{Reponse Hugo:}\\
+
+By making the outer variable x constant, we can reformulate the inner maximization problem as follows:
+
+\begin{equation}
+\begin{array}{ll@{}llll}
+\displaystyle\max_{z} & \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
+\text{subject to} 
+& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T \\
+& z_i  \leq 1/p_i &&i=1 ,\dots, I\\
+                & z_i \geq 0 &&i=1 ,\dots, I
+\end{array}
+\end{equation}
+
+In matrix form, this becomes:
+
+\begin{equation}
+\begin{array}{ll@{}llll}
+\displaystyle\max_{z} & c^T z\\
+\text{subject to} 
+& Az \leq b\\
+& z \geq 0
+\end{array}
+\end{equation}
+
+with c, A and b equal to the following:
 
 
+\begin{equation*}
+c \in\mathbb{R}^{Ix1} = \begin{pmatrix}
+
+x_1 p_1\\
+x_2 p_2\\
+...\\
+x_Ip_I\\
+\end{pmatrix}\\
+
+A \in\mathbb{R}^{(I+1)xI} = \begin{pmatrix}
+
+1 & 0 & ... & 0 \\
+0 & 1 & ... & 0 \\
+... & ... & ... & ...\\
+0 & 0& ... & 1\\
+1 & 1 & ... & 1\\
+\end{pmatrix} \\
+
+b \in\mathbb{R}^{(I+1)x1} = \begin{pmatrix}
+
+1/p_1\\
+1/p_2\\
+...\\
+1/p_I\\
+T\\
+\end{pmatrix}
+\end{equation*}
+
+A dualization can occur in both directions. As such, it is important to notice that we can dualize a maximization problem by doing the reverse of a regular dualization process on this maximization process. As such, we get the following Primal (P) and Dual (D) problems:
+
+\begin{equation}
+\begin{array}{lll@{}llllll}
+\text{(P)}  &\displaystyle\max_{z}\ &c^Tz\  && \text{(D)} & \displaystyle\min_{y}\ &b^Ty\\
+&\text{subject to} 
+&Az\leq c &&&\text{subject to} & A^Ty\geq b\\
+&&z\ \geq 0&&&& y\ \geq 0 \\ 
+
+\end{array}
+\end{equation}
+
+As such, the corresponding minimization problem becomes:
+
+\begin{equation}
+\begin{array}{ll@{}lll}
+\displaystyle\min_{y}\ &&b^T y\\
+
+\text{subject to} 
+&& A^T y \geq c \\
+&& y\ \geq 0 \\ 
+
+\end{array}
+\end{equation}
+
+
+with:
+
+\begin{equation*}
+c \in\mathbb{R}^{Ix1} = \begin{pmatrix}
+
+x_1 p_1\\
+x_2 p_2\\
+...\\
+x_Ip_I\\
+\end{pmatrix}\\
+
+A^T \in\mathbb{R}^{Ix(I+1)} = \begin{pmatrix}
+
+1 & 0 & ... & 0 & 1 \\
+0 & 1 & ... & 0 & 1 \\
+... & ... & ... & ...\\
+0 & 0& ... & 1 & 1\\
+
+\end{pmatrix} \\
+
+b \in\mathbb{R}^{(I+1)x1} = \begin{pmatrix}
+
+1/p_1\\
+1/p_2\\
+...\\
+1/p_I\\
+T\\
+\end{pmatrix}
+\end{equation*}
+
+We notice that there is an extra variable in the minimization problem, which will be denoted $y_{I+1}$, which refers to the total amount of money the thief gets.
 
 \begin{equation}
 \begin{array}{ll@{}lll}
@@ -460,6 +569,12 @@ This problem finds the upper (\textbf{Lower bound non?}) bound to the optimal ti
 
 \end{array}
 \end{equation}
+
+This problem finds the upper (\textbf{Lower bound non?}) bound to the optimal time the thief can take. This is symmetrical to a standard dualization of a minimization problem, which usually finds the lower bound of a primal problem. The extra variable represents the total amount of money the thief can take, regardless of his strategy. Should the problem be implemented correctly, then all the y variables should be equal to zero and $y_{I+1}$ should be non-zero.\\
+
+
+
+
 \end{exercise}
 
 \begin{exercise}{5.5} (3 points) Implement the resulting linear program in Python and solve it for the provided input data $p, C \in \mathbb{R}^I$ and $T \in \mathbb{R}$. Report the worst amount of money you lose, the optimal plan for hiding the money and the thief's optimal search strategy. 
