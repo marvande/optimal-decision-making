@@ -138,10 +138,10 @@ values of $\lambda$ and select the estimator that has minimal MAE on $D_{val}$. 
 We write $\Lambda = [\lambda_1, ... , \lambda_k]$ the set of all values for the hyperparameter $\lambda$. We also note $x_i\in \mathbb{R}^d \; \forall i=1 ,\dots, N$ the data samples and $y_i\in \mathbb{R}$ the target variable for input $x_i$. For $\lambda\geq 0$, LASSO regression finds and optimal $\theta \in \mathbb{R}^d$ such that   
 
 \begin{equation}
-\begin{array}{ll@{}lll}
-\text{min} &\displaystyle\sum\limits_{i=1}^{N} & |y_i-\theta^Tx_i| + &\lambda\displaystyle\sum\limits_{i=1}^{d}|\theta_i|
-\end{array}
+ \displaystyle\sum\limits_{i=1}^{N}  |y_i-\theta^Tx_i| + \lambda\displaystyle\sum\limits_{i=1}^{d}|\theta_i|
 \end{equation}
+
+is minimal. 
 
 With the addition of auxiliary variables $z_i$ and $\delta_i$, we use the fact that $|y_i - \theta^T x_i| < z_i$ is equivalent to $-z_i < y_i - \theta^T x_i  < z_i$. So, minimising the sum of $ |y_i-\theta^Tx_i|$ is equal to minimising the sum of $z_i$ because
 
@@ -218,24 +218,27 @@ Again, performance on both sets are very close, though the result on the test se
 \section{Convex Hulls}
 \begin{exercise}{3}
 
-(5 points). Denote by $X$ the feasible set of problem (4). Write the
+(5 points). Denote by $X$ the feasible set of Eq.~\ref{eq:lp-2}. Write the
 convex hull of $X$ using a finite set of simple (in-)equalities on $x_1$ and $x_2$ and find its vertices. Plot both $X$ and $conv(X)$.
 
+\begin{equation}\label{eq:lp-2}
+\begin{array}{ll@{}ll}
+\text{min}  &-x_1 - 2x_2\\
+\text{subject to} 
+& x_1+x_2 &\leq 1 \\
+&x_1,x_2 &\in \{0,1\}
+\end{array}
+\end{equation}
 
 \textit{Answer.}
-Le $X$ ve the feasible set of problem (4), the convex hull can be written as : 
-
-
-\begin{align*}
- x_1 + x_2 \leq 1 \\
- x_1  \geq 0 \\ 
- x_2 \geq 0 \\
- \end{align*}
-
-
-The vertices are $(0, 0)$, $(0, 1)$ and $(1, 0 )$. 
-
-Figure \ref{fig:hull} shows X and $Conv(X)$
+Le $X$ be the feasible set of Eq.~\ref{eq:lp-2}, the convex hull $conv(X)$ can be written as: 
+\begin{equation}\label{eq:convex-hull}
+\begin{array}{l@{}ll}
+ x_1 + x_2 &\leq 1 \\
+ x_1,x_2  &\geq 0 \\ 
+ \end{array}
+\end{equation}
+The vertices of $conv(X)$ are $(0, 0)$, $(0, 1)$ and $(1, 0 )$. Figure~\ref{fig:hull} shows the feasible set $X$ and its convex hull $conv(X)$.
 
 \begin{figure}[!ht]
   \centering
@@ -255,23 +258,14 @@ Figure \ref{fig:hull} shows X and $Conv(X)$
     grid style=dashed,
     axis lines = middle,
 ]
-
-
-   
-    
     \addplot [thick,color=blue,mark=o,fill=blue, 
-                    fill opacity=0.05]coordinates {
+          fill opacity=0.05]coordinates {
             (0, 0) 
             (0, 1)
             (1, 0)  };
-    
-    
-    \addplot[name path=f,domain=0:1,blue] {1 - x };
-    %\addplot[name path=f,domain=-.15:1.05,blue] {};
-    
-
+    \addplot[name path=f,domain=0:1,blue] {1 - x};
+    \addplot[name path=f2,domain=0:1,blue] {0};
     \path[name path=axis] (axis cs:0,0) -- (axis cs:1,0);
-    
     \addplot [
         thick,
         color=blue,
@@ -282,11 +276,10 @@ Figure \ref{fig:hull} shows X and $Conv(X)$
         of=f and axis,
         soft clip={domain=0:1},
     ];
-    
 \end{axis}
 \end{tikzpicture}
 
- \caption{Plot of $X$ and $Conv(X)$}
+ \caption{Plot of feasible set $X$ (coordinates $(0, 0)$, $(0, 1)$ and $(1, 0 )$) and its convex hull $Conv(X)$ (lines in dark blue)}
   \vspace{-3mm}
   \label{fig:hull}
 \end{figure}
@@ -294,13 +287,12 @@ Figure \ref{fig:hull} shows X and $Conv(X)$
 \end{exercise}
 
 \begin{exercise}{4}
-(5 points). Replace the feasible set of problem (4) with its convex hull and solve the resulting linear program using MATLAB or Python. Report the optimal decision variables. Explain why they must be binary. Hint:
-Characterize the BFS of the convex hull of the feasible set.
+(5 points). Replace the feasible set of Eq.~\ref{eq:convex-hull} with its convex hull and solve the resulting linear program using Python. Report the optimal decision variables. Explain why they must be binary. Hint:
+Characterise the BFS of the convex hull of the feasible set.
 
 
-\textit{Answer}
+\textit{Answer.}
 Using the convex hull, we get the following linear program : 
-
 
 \begin{equation*}
 \begin{array}{lll@{}lll}
@@ -312,9 +304,9 @@ Using the convex hull, we get the following linear program :
 \end{array}
 \end{equation*}
 
-Solving the linear program with Python, we obtain  the following result : $x_1 =  0.0$ and $x_2 = 1.0$
+This transforms our Integer LP from before into a standard LP. Solving the new LP with Python, we obtain  the following optimal vertex: $x_1^*=  0.0$ and $x_2^* = 1.0$. So, the extreme points of $conv(X)$ have integer coordinates and are indeed binary. In the lecture, we saw that MILP can be solved by finding an extreme point solution to CMILP which is what has been done here. We saw that this was because the extreme points of $conv(X)$ have integer coordinate and they must be binary because of the original feasible set $X$. If the solution using  
 
-I this case, the extreme points of $conv(D)$ have integer coordinates. MILP can be solved by finding an extreme point solution to CMILP
+\textbf{COMPLETER AVEC BFS}
 
 %Let $x^{\*}$ be an extreme point %% Ore BSF, need to check 
 %Suppose towards contradiction that there exist a BFS $x^*$ that is not binary. So that exists $x_i^*$ s.t $0< x_i^* < 1 $ 
@@ -323,101 +315,143 @@ I this case, the extreme points of $conv(D)$ have integer coordinates. MILP can 
   
   
 \section{Zero-Sum Games}
-\begin{exercise}{5}
-(20 points)\\
+\begin{exercise}{5.1}
+(3 points) Characterise your decisions variables and feasible set.
 
-Part 1: Characterize your decisions variables and feasible set.\\
-
-\textit{Answer}
-The only decision attributed to the player (the one who is trying to save his money) is how much money to put into each hiding spot $x_i$. The amount of money placed in each hiding spot must be subjected to two different constraints:
-
+\textit{Answer.}
+The only decision attributed to the player i.e., the one who is trying to save their money is how much money to put in each hiding spot $x_i$. That amount $x_i$ is subject to two different constraints:
 \begin{itemize}
-    \item the amount of money in hiding spot \textit{i} cannot exceed the maximum amount of money that can be hidden in this spot $C_i$.
-    \item the total amount of money hidden in all spots must be equal to the total amount of money the player has, i.e. must be equal to C.
+    \item The amount of money $x_i$ in hiding spot $i\in[I]$ cannot exceed the maximum capacity $C_i$ of money that can be hidden in this spot and has to be non negative.
+    \item The total amount of money hidden in all spots must be equal to the total amount of money the player has $C$ (in our case \$10,000). This is assuming the player wants to hide all their money. 
 \end{itemize}
 
-To summarize, the constraints can be expressed as:
+To summarise this, the constraints delimiting the player's feasible set can be expressed as:
 
-\begin{equation}
+\begin{equation}\label{eq:owner}
 \begin{array}{ll@{}lll}
 
 \displaystyle\sum\limits_{i=1}^{I} x_i = C \\ \\
-x_i \leq C_i && i=1 ,\dots, I\\ \\
-x \geq 0
-
+x_i \leq C_i && i=1 ,\dots, I\\ 
+x_i \geq 0 && i=1 ,\dots, I
 \end{array}
 \end{equation}
+\end{exercise}
 
+\begin{exercise}{5.2} (3 points) 
+Characterise the thief's decision variables and feasible set.
 
-
-Part 2:Characterize the thief’s decision variables and feasible set.
-
-\textit{Answer}
-
-The two decision variables attributed to the adversary, in this case the robber (the one who is trying to take the money from the player) is how much time to put into searching for money, and where to spend this time. However, since these two variables are redundant, they can be condensed to one, which is the time spent searching for money, represented by the variable $z_i$. The time spent searching for money has two different constraints:
+\textit{Answer.}
+The two decision variables attributed to the adversary, in this case the robber is how much time they put into searching for money, and where to spend this time. However, since these two variables are redundant, they can be condensed into one, which is the time spent searching for money in spot $i$, represented by the variable $z_i$. This time is subject to two constraints:
 
 \begin{itemize}
-    \item The total amount of time spent searching for money must not exceed the time \textit{T} needed for the police to arrive to the house.
-    \item The time spent in one area multiplied by the area's search difficulty factor p cannot exceed 1. If it equals 1, it means all of the money in that spot has been found.
+    \item The total amount of time spent searching cannot exceed the time \textit{T} needed for the police to arrive at the house.
+    \item The time spent in one spot multiplied by the area's search difficulty factor $p_i$ cannot exceed 1. If it equals 1, it means all of the money in that spot has been found.
 \end{itemize}
 
-To summarized, the two constraints can be expressed as:
+So, the constraints delimiting the thief's feasible set can be expressed as
 
-\begin{equation}
+\begin{equation}\label{eq:thief}
 \begin{array}{ll@{}lll}
 
 \displaystyle\sum\limits_{i=1}^{I} z_i \leq T \\ \\
-z_i p_i \leq C_i && i=1 ,\dots, I\\ \\
+z_i p_i \leq 1 && i=1 ,\dots, I\\ \\
 z_i \geq 0
 \end{array}
 \end{equation}
+\end{exercise}
 
+\begin{exercise}{5.3} (3 points) Use the solutions of the first two questions to formulate a MinMax problem with objective function $f(x, z) =\sum\limits_{i=1}^{I} x_i z_i p_i $. 
 
-Part 3:
+\textit{Answer.}
+The problem can be written as the following:
 
-\textit{Answer}
-The problem can be written as the min-max problem below:
+\begin{equation}
+\begin{array}{ll@{}llll}
+\displaystyle\min_{x}\displaystyle\max_{z} & \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
+\text{subject to} 
+& \displaystyle\sum\limits_{i=1}^{I} x_i = C\\
+& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T \\
+& x_i z_i p_i \leq C_i &&i=1 ,\dots, I\\
+                & x_i,z_i \geq 0 &&i=1 ,\dots, I
+\end{array}
+\end{equation}
+For this, we used the fact that the second constraint of Eq.~\ref{eq:thief} ($z_i p_i \leq 1$), can be combined with the second constraint of Eq.~\ref{eq:owner} ($x_i \leq C_i$) as $x_i z_i p_i \leq C_i$ because $x_i z_i p_i$ will be the maximal amount of money the thief will find at spot $i$. 
+\end{exercise}
+
+\begin{exercise}{5.4} (8 points)
+Dualise the inner maximisation problem to reformulate the MinMax problem as a standard minimisation problem, which can be addressed with linear programming solvers. Hint: The decision variables of the outer minimisation problem represent constants for the inner maximisation problem.
+
+\textit{Answer.}
+Assuming that we keep the outer minimisation constant while resolving the inner maximisation problem, we can keep x constant. Together with the other constant $p_i$, we write a new constant $u_i = p_ix_i$. Thus, we can reformulate the maximisation as follows:
 
 \begin{equation}
 \begin{array}{ll@{}lll}
-\text{min}_x\ \text{max}_z\ && \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
+\displaystyle\max_{z} && \displaystyle\sum\limits_{i=1}^{I} u_iz_i\\
 
 \text{subject to} 
-&& \displaystyle\sum\limits_{i=1}^{I} x_i = C\\
-&& x_i \leq C_i && i=1 ,\dots, I\\
-&& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T \\
-                && z_i p_i \leq 1  &&  i=1 ,\dots, I\\
-                && x,z &\geq 0\\ 
+&& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T &&  \\
+                && z_i u_i \leq C_i  &&  i=1 ,\dots, I\\
+                && z_i\ \geq 0 &&i=1 ,\dots, I\\ 
 
+\end{array}
+\end{equation}
 
+The problem becomes a maximisation problem centered on the variables $z_i$, which is the time allocated by the thief to searching each spot $i$. We write $y_i$ as its dual variable. The problem can be dualised as follows. 
+We apply the formula that the dual (D) of the primal problem (P): 
+\begin{equation}
+\begin{array}{lll@{}llllll}
+\text{(P)}  &\displaystyle\min_{x}\ &c^Tx && \text{(D)} & \displaystyle\max_{y}\ &b^Ty\\
+&\text{subject to} 
+&Ax\leq b &&&\text{subject to} &A^Ty\geq c\\
+&& x\ \geq 0 &&&&y\ \geq 0\\ 
+
+\end{array}
+\end{equation}
+In our case, we write $z_i\in\mathbb{R}^{I}$ as our primal variable and $c^T = \begin{pmatrix}-u_1 & -u_2 & ... &-u_I\end{pmatrix} \in\mathbb{R}^{I}$ (the negative sign changes the max into a min so that we can go from the primal formulation and simplify calculations). Then  $b^T = \begin{pmatrix}T & C_1 & ... &C_I\end{pmatrix}\in\mathbb{R}^{I+1}$ and
+\begin{equation*}
+    A \in\mathbb{R}^{I+1xI} = \begin{pmatrix}
+1 & 1 & ... & 1\\
+u_1 & 0 & ... & 0 \\
+0 & u_2 & ... & 0 \\
+0 & 0& ... & u_I
+\end{pmatrix}
+\end{equation*}
+
+where the first row of $A$ are only $1$. From this, we can write the dual formulation:
+
+\begin{equation}
+\begin{array}{ll@{}lll}
+\displaystyle\min_{y}\ &&-Ty_{I+1} - \displaystyle\sum\limits_{i=1}^{I} C_iy_i\\
+
+\text{subject to} 
+&& y_{I+1} + u_iy_{i+1}\geq -u_i  &&  i=1 ,\dots, I\\
+&& y_i\ \geq 0 && i=1 ,\dots, I+1\\ 
+
+\end{array}
+\end{equation}
+
+This problem can be re-written as the following maximisation problem:
+\begin{equation}
+\begin{array}{ll@{}lll}
+\displaystyle\max_{y}\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} C_iy_i\\
+
+\text{subject to} 
+&& -y_{I+1} - u_iy_{i+1}\leq u_i  &&  i=1 ,\dots, I\\
+&& y_i\ \geq 0 && i=1 ,\dots, I+1\\ 
 
 \end{array}
 \end{equation}
 
 
-Part 4: Dualize the inner maximization problem to reformulate the MinMax prob- lem as a standard minimization problem, which can be addressed with lin- ear programming solvers. Hint: The decision variables of the outer mini- mization problem represent constants for the inner maximization problem.\\
 
-\textit{Answer}
-Assuming that we keep the outer minimization constant while resolving the inner maximization problem, we can keep x constant. Thus, we can reformulate the maximization as follows:
+\textbf{Reponse Hugo:}
+This problem finds the upper (\textbf{Lower bound non?}) bound to the optimal time the thief can take. The extra variable represents the total amount of money the thief can take, regardless of his strategy. Should the problem be implemented correctly, then all the y variables should be equal to zero and $y_{I+1}$ should be non-zero.\\
 
-\begin{equation}
-\begin{array}{ll@{}lll}
-\text{max}_z\ && \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
 
-\text{subject to} 
-&& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T &&  i=1 ,\dots, I \\
-                && z_i p_i \leq 1  &&  i=1 ,\dots, I\\
-                && z\ \geq 0\\ 
-
-\end{array}
-\end{equation}
-
-The problem becomes a maximization problem centered on the variable z, which is the time allocated by the thief to searching each spot.
-To write the dual problem, we take the dual variable y. The problem can be dualized as follows:
 
 \begin{equation}
 \begin{array}{ll@{}lll}
-\text{min}_y\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} \frac{1}{p_i} y_i\\
+\displaystyle\min_{y}\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} \frac{1}{p_i} y_i\\
 
 \text{subject to} 
 && y_i + y_{I+1} \geq x_i p_i  &&  i=1 ,\dots, I\\
@@ -425,11 +459,10 @@ To write the dual problem, we take the dual variable y. The problem can be duali
 
 \end{array}
 \end{equation}
+\end{exercise}
 
-This problem finds the upper bound to the optimal time the thief can take. The extra variable represents the total amount of money the thief can take, regardless of his strategy. Should the problem be implemented correctly, then all the y variables should be equal to zero and $y_{I+1}$ should be non-zero.\\
-
-
-Part 5:Implement the resulting linear program in Python or MATLAB and solve it for the provided input data p, C \in \mathbb{R}^I and T \in \mathbb{R}. Use the code skeletons available from Moodle. Report the worst amount of money you lose, the optimal plan for hiding the money and the thief's optimal search strategy. Hint: Think about the meaning of the problem’s dual variables.
+\begin{exercise}{5.5}
+Implement the resulting linear program in Python or MATLAB and solve it for the provided input data $p, C \in \mathbb{R}^I$ and $T \in \mathbb{R}$. Use the code skeletons available from Moodle. Report the worst amount of money you lose, the optimal plan for hiding the money and the thief's optimal search strategy. Hint: Think about the meaning of the problem’s dual variables.
 
 
 \textit{Answer}
