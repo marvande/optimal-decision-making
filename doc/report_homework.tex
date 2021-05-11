@@ -13,7 +13,8 @@
 \usepackage{marginnote}
 \usepackage{pgfplots}
 \setlength{\parindent}{0cm}
-
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{comment}
 
 
@@ -96,7 +97,7 @@
 	
 	\maketitle
 
-\section{Mean Absolute Error Penalised Regression}
+\section{Mean Absolute Error Penalised Regression}\label{sec:mae}
 
 \begin{figure}[!ht]
   \centering
@@ -205,7 +206,7 @@ Again, performance on both sets are very close, though the result on the test se
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{doc/images/download (14).png}
+  \includegraphics[width=0.5\textwidth]{doc/images/cross-validation.png}
   \caption{Validation error for different hyperparameters $\lambda_$.}
   \vspace{-3mm}
   \label{fig:hyperpar}
@@ -610,8 +611,83 @@ We notice a significant difference between the MEA on the test set against the t
 
  \end{exercise}
 
-  \section*{Appendix}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{doc/images/cross_val_insurance.png}
+  \caption{Cross-validation on parameter $\lambda$ in Lasso regression on insurance data. 25-75\% split for cross-validation.}
+  \vspace{-3mm}
+  \label{fig:cross-val-insurance}
+\end{figure}
+
+\section{Toy example}
+\begin{exercise}{8} (10 points) Apply one of the regression techniques seen in Sections 2 and 5 to a dataset of your choice. Hint: Good sources of datasets
+include Kaggle and the UCI archive. In answering this question, put emphasis
+on interpreting your results and on justifying the chosen optimization scheme.
+
+\begin{figure}[!ht]
+     \centering
+     \begin{subfigure}[b]{1\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{doc/images/bmi.png}
+         \caption{Prediction from bmi}
+         \label{fig:bmi}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{1\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{doc/images/age.png}
+         \caption{Prediction from age. Results from cross-validation on the right. }
+         \label{fig:age}
+     \end{subfigure}
+        \caption{Linear regression to predict insurance charges from bmi or age. On the right, validation error obtained by cross-validation on a 25-75\% split dataset. }
+        \label{fig:age-bmi-raw}
+\end{figure}
+
+
+\textit{Answer.} As a toy example, we choose the \textit{Medical Cost Personal Datasets} dataset frome Kaggle (\href{https://www.kaggle.com/mirichoi0218/insurance}{link to dataset}). The dataset contains 1338 samples of insurance charges in the U.S and the following columns: 
+\begin{itemize}
+    \item age: age of primary beneficiary
+    \item sex: insurance contractor gender, female, male
+    \item bmi: body mass index, providing an understanding of body
+    \item children: number of children covered by health insurance 
+    \item smoker: smoking ('yes'/'no)
+    \item region: the beneficiary's residential area in the US, northeast, southeast, southwest, northwest.
+    \item charges: individual medical costs billed by health insurance
+\end{itemize}
+From this, following the same initial steps as in section~\ref{sec:mae} (Mean-Absolute-Error Penalized Regression), we first try to predict the charges from the rest of the data, so $X\in\mathbb{R}^{1338x6}$. Unfortunately, due to the high variety in data, the predictions are really inaccurate. Results of cross-validation to find the best parameters on a 25-75\% split can be see in Figure~\ref{fig:cross-val-insurance}. Validation errors stay very high for all parameters.     
+
+Because of this, we decided to predict one-dimensional regressions instead, to see if the high-dimensionality of the initial data was the problem. For this, we tried predicting the insurance charges from either the age or bmi of clients (Figure~\ref{fig:age-bmi-raw}). For both, the predictions are again very poor but we still notice some interesting things. When predicting from bmi, we see that the smoking habit has the a drastic effect on insurance charges, almost splitting the  results into two clusters. Regarding the predictions from the age, we see that there seem to be three clusters of points, the biggest being the lower one. This might explain why the evaluation error is so high for both regressions, as all samples above that lower line might be seen as outliers. The plots look actually really linear, but it would probably be better to do one regression per cluster. We show this by looking only at samples with charges below \$10'000 i.e., the lower line (Figure~\ref{fig:age-cluster-1}). When applying the same formula only to those samples, we see that the validation error has become much smaller and that the prediction now follows the samples in a nice linear way. We now also notice that there seems to be a separation in charges according to the regions. Regions 3-5 seem to have higher charges than 0-2, so there might be a second dimension in the problem and in further work we might try predicting charges from the age and region. 
+
+The same technique was applied to the smoking variable, where we isolated charges from smokers and non smokers and tried to predict their insurance charges from their bmi (Figure~\ref{fig:bmi-cluster-1}). Compared to the last results, the problem still don't look very linear and predictions are not very accurate. Because of their circular form, in this case it might be more advised to use a clustering to predict the charges. For smokers, there are definitely two clear clusters depending on the bmi of the client. 
+
+
+
+
+\begin{figure}[!ht]
+     \centering
+     \begin{subfigure}[b]{1\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{doc/images/age_cluster.png}
+         \caption{Prediction from age, on charges below \$10'000}
+         \label{fig:age-cluster-1}
+     \end{subfigure}
+         \hfill
+     \begin{subfigure}[b]{1\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{doc/images/smokes_clusters.png}
+         \caption{Prediction from bmi, depending on smoking habit}
+         \label{fig:bmi-cluster-1}
+     \end{subfigure}
+        \caption{Linear regression to predict insurance charges from bmi or age. On the right, validation error obtained by cross-validation on a 25-75\% split dataset.}
+        \label{fig:age-bmi-clusters}
+\end{figure}
+
+
+\end{exercise}
+
+
 \newpage  
+  \section*{Appendix}
  \begin{thebibliography}{9}
 \bibitem{rockafellar1970convex} 
 Rockafellar, R Tyrrell: Convex analysis, 1970, volume 36, Princeton university press
