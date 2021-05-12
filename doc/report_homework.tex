@@ -13,7 +13,8 @@
 \usepackage{marginnote}
 \usepackage{pgfplots}
 \setlength{\parindent}{0cm}
-
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{comment}
 
 
@@ -96,7 +97,7 @@
 	
 	\maketitle
 
-\section{Mean Absolute Error Penalised Regression}
+\section{Mean Absolute Error Penalised Regression}\label{sec:mae}
 
 \begin{figure}[!ht]
   \centering
@@ -205,7 +206,7 @@ Again, performance on both sets are very close, though the result on the test se
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{doc/images/download (14).png}
+  \includegraphics[width=0.5\textwidth]{doc/images/cross-validation.png}
   \caption{Validation error for different hyperparameters $\lambda_$.}
   \vspace{-3mm}
   \label{fig:hyperpar}
@@ -330,7 +331,7 @@ To summarise this, the constraints delimiting the player's feasible set can be e
 \begin{equation}\label{eq:owner}
 \begin{array}{ll@{}lll}
 
-\displaystyle\sum\limits_{i=1}^{I} x_i = C \\ \\
+\displaystyle\sum\limits_{i=1}^{I} x_i = 10'000 \\ \\
 x_i \leq C_i && i=1 ,\dots, I\\ 
 x_i \geq 0 && i=1 ,\dots, I
 \end{array}
@@ -391,186 +392,48 @@ Assuming that we keep the outer minimisation constant while resolving the inner 
 
 \text{subject to} 
 && \displaystyle\sum\limits_{i=1}^{I} z_i \leq T &&  \\
-                && z_i p_i \leq 1  &&  i=1 ,\dots, I\\
+                && z_i  \leq p_i  &&  i=1 ,\dots, I\\
                 && z_i\ \geq 0 &&i=1 ,\dots, I\\ 
 
 \end{array}
 \end{equation}
 
-The problem becomes a maximisation problem centered on the variables $z_i$, which is the time allocated by the thief to searching each spot $i$. We write $y_i$ as its dual variable. The problem can be dualised as follows. 
+The problem becomes a maximisation problem centered on the variables $z_i$, which is the time allocated by the thief to searching each spot $i$. We write $y_i$ as its primal variable. The problem can be dualised as follows. 
 We apply the formula that the dual (D) of the primal problem (P): 
 \begin{equation}
 \begin{array}{lll@{}llllll}
-\text{(P)}  &\displaystyle\min_{x}\ &c^Tx && \text{(D)} & \displaystyle\max_{y}\ &b^Ty\\
+\text{(P)}  &\displaystyle\min_{y}\ &c^Ty && \text{(D)} & \displaystyle\max_{z}\ &b^Tz\\
 &\text{subject to} 
-&Ax\leq b &&&\text{subject to} &A^Ty\geq c\\
-&& x\ \geq 0 &&&&y\ \geq 0\\ 
+&Ay\geq b &&&\text{subject to} &A^Tz\leq c\\
+&& y\ \geq 0 &&&&z\ \geq 0\\ 
 
 \end{array}
 \end{equation}
-In our case, we write $z_i\in\mathbb{R}^{I}$ as our primal variable and $c^T = \begin{pmatrix}-x_1p_1 & -x_2p_2 & ... &-x_Ip_I\end{pmatrix} \in\mathbb{R}^{I}$ (the negative sign changes the max into a min so that we can go from the primal formulation and simplify calculations). Then  $b^T = \begin{pmatrix}T & 1 & ... &1\end{pmatrix}\in\mathbb{R}^{I+1}$ and
+In our case, we see that we actually start from the dual formulation and would like the primal problem. So, we write $z_i\in\mathbb{R}^{I}$ as our dual variable and $b^T = \begin{pmatrix}x_1p_1 & x_2p_2 & ... &x_Ip_I\end{pmatrix} \in\mathbb{R}^{I}$. Then  $c^T = \begin{pmatrix}T & p_1 & ... &p_I\end{pmatrix}\in\mathbb{R}^{I+1}$ and
 \begin{equation*}
-    A \in\mathbb{R}^{I+1xI} = \begin{pmatrix}
+    A^T \in\mathbb{R}^{I+1xI} = \begin{pmatrix}
 1 & 1 & ... & 1\\
-p_1 & 0 & ... & 0 \\
-0 & p_2 & ... & 0 \\
-0 & 0& ... & p_I
-\end{pmatrix}
-\end{equation*}
-
-where the first row of $A$ are only $1$. From this, we can write the dual formulation:
-
-\begin{equation}
-\begin{array}{ll@{}lll}
-\displaystyle\min_{y}\ &&-Ty_{I+1} - \displaystyle\sum\limits_{i=1}^{I} y_i\\
-
-\text{subject to} 
-&& y_{I+1} + p_iy_{i+1}\geq -x_ip_i  &&  i=1 ,\dots, I\\
-&& y_i\ \geq 0 && i=1 ,\dots, I+1\\ 
-
-\end{array}
-\end{equation}
-
-This problem can be re-written as the following maximisation problem:
-\begin{equation}
-\begin{array}{ll@{}lll}
-\displaystyle\max_{y}\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} y_i\\
-
-\text{subject to} 
-&& -y_{I+1} - p_iy_{i+1}\leq x_ip_i  &&  i=1 ,\dots, I\\
-&& y_i\ \geq 0 && i=1 ,\dots, I+1\\ 
-
-\end{array}
-\end{equation}
-
-
-
-\textbf{Reponse Hugo:}\\
-
-By making the outer variable x constant, we can reformulate the inner maximization problem as follows:
-
-\begin{equation}
-\begin{array}{ll@{}llll}
-\displaystyle\max_{z} & \displaystyle\sum\limits_{i=1}^{I} x_i z_i p_i\\
-\text{subject to} 
-& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T \\
-& z_i  \leq 1/p_i &&i=1 ,\dots, I\\
-                & z_i \geq 0 &&i=1 ,\dots, I
-\end{array}
-\end{equation}
-
-In matrix form, this becomes:
-
-\begin{equation}
-\begin{array}{ll@{}llll}
-\displaystyle\max_{z} & c^T z\\
-\text{subject to} 
-& Az \leq b\\
-& z \geq 0
-\end{array}
-\end{equation}
-
-with c, A and b equal to the following:
-
-
-\begin{equation*}
-c \in\mathbb{R}^{Ix1} = \begin{pmatrix}
-
-x_1 p_1\\
-x_2 p_2\\
-...\\
-x_Ip_I\\
-\end{pmatrix}\\
-
-A \in\mathbb{R}^{(I+1)xI} = \begin{pmatrix}
-
 1 & 0 & ... & 0 \\
 0 & 1 & ... & 0 \\
-... & ... & ... & ...\\
-0 & 0& ... & 1\\
-1 & 1 & ... & 1\\
-\end{pmatrix} \\
-
-b \in\mathbb{R}^{(I+1)x1} = \begin{pmatrix}
-
-1/p_1\\
-1/p_2\\
-...\\
-1/p_I\\
-T\\
+0 & 0& ... & 1
 \end{pmatrix}
 \end{equation*}
 
-A dualization can occur in both directions. As such, it is important to notice that we can dualize a maximization problem by doing the reverse of a regular dualization process on this maximization process. As such, we get the following Primal (P) and Dual (D) problems:
+where the first row of $A^T$ are only $1$. From this, we can write the primal formulation:
 
 \begin{equation}
-\begin{array}{lll@{}llllll}
-\text{(P)}  &\displaystyle\max_{z}\ &c^Tz\  && \text{(D)} & \displaystyle\min_{y}\ &b^Ty\\
+\begin{array}{lll@{}lll}
+(P) &\displaystyle\min_{y}\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} \frac{1}{p_i}y_i\\
+
 &\text{subject to} 
-&Az\leq c &&&\text{subject to} & A^Ty\geq b\\
-&&z\ \geq 0&&&& y\ \geq 0 \\ 
+&& y_{I+1} + y_{i}\geq x_ip_i  &&  i=1 ,\dots, I\\
+&&& y_i\ \geq 0 && i=1 ,\dots, I+1\\ 
 
 \end{array}
 \end{equation}
 
-As such, the corresponding minimization problem becomes:
-
-\begin{equation}
-\begin{array}{ll@{}lll}
-\displaystyle\min_{y}\ &&b^T y\\
-
-\text{subject to} 
-&& A^T y \geq c \\
-&& y\ \geq 0 \\ 
-
-\end{array}
-\end{equation}
-
-
-with:
-
-\begin{equation*}
-c \in\mathbb{R}^{Ix1} = \begin{pmatrix}
-
-x_1 p_1\\
-x_2 p_2\\
-...\\
-x_Ip_I\\
-\end{pmatrix}\\
-
-A^T \in\mathbb{R}^{Ix(I+1)} = \begin{pmatrix}
-
-1 & 0 & ... & 0 & 1 \\
-0 & 1 & ... & 0 & 1 \\
-... & ... & ... & ...\\
-0 & 0& ... & 1 & 1\\
-
-\end{pmatrix} \\
-
-b \in\mathbb{R}^{(I+1)x1} = \begin{pmatrix}
-
-1/p_1\\
-1/p_2\\
-...\\
-1/p_I\\
-T\\
-\end{pmatrix}
-\end{equation*}
-
-We notice that there is an extra variable in the minimization problem, which will be denoted $y_{I+1}$, which refers to the total amount of money the thief gets.
-
-\begin{equation}
-\begin{array}{ll@{}lll}
-\displaystyle\min_{y}\ &&Ty_{I+1} + \displaystyle\sum\limits_{i=1}^{I} \frac{1}{p_i} y_i\\
-
-\text{subject to} 
-&& y_i + y_{I+1} \geq x_i p_i  &&  i=1 ,\dots, I\\
-&& y_i\ \geq 0 && i=1 ,\dots, I+1\\ 
-
-\end{array}
-\end{equation}
-
-This problem finds the upper (\textbf{Lower bound non?}) bound to the optimal time the thief can take. This is symmetrical to a standard dualization of a minimization problem, which usually finds the lower bound of a primal problem. The extra variable represents the total amount of money the thief can take, regardless of his strategy. Should the problem be implemented correctly, then all the y variables should be equal to zero and $y_{I+1}$ should be non-zero.\\
+We notice that there is an extra variable $y_{I+1}$ in the minimisation problem. This variable refers to the total amount of money the thief gets, regardless of his strategy.
+From weak duality, we know that $OPT_{dual}\leq OPT_{primal}$ and so the primal problem we found here gives an upper bound on the optimal time the thief takes per spot ($z_i^*$). Should the problem be implemented correctly, then in the optimal solution all the y variables should be equal to zero and $y_{I+1}$ should be non-zero.\\
 
 
 
@@ -587,28 +450,27 @@ Upon implementing the modified problem, we get the following results:
 x = \begin{pmatrix}
 2000\\
 1000\\
-2322.58064516\\
-1935.48387097\\
-1451.61290323\\
-1290.32258065\\
+1961.0894\\
+1634.2412\\
+1225.6809\\
+2178.9883\\
 \end{pmatrix} 
 \approx 
 \begin{pmatrix}
 2000\\
 1000\\
-2322.58\\
-1935.48\\
-1451.61\\
-1290.32\\
+1961.09\\
+1634.24\\
+1225.68\\
+2178.98\\
 \end{pmatrix}
 
 \\ \\
 
-y_{I+1} = 2322.5806451612902 \approx 2322.58
+y_{I+1} = 1961.0894 \approx 1961.09
 \end{array}
 \end{equation}
-
-As seen, the value found by the dual problem is very close to the value of the money hidden in the third spot. This spot is also one of the two spots (along with spot 2) which can be searched in its entirety by the thief within the allocated time T without being caught by the police. Further analysis of this solution can show that searching a combination of these hiding spots still yields a maximum profit of 2322.58 dollars for the thief. For example, should the thief search the 5th spot completely and the last spot until time runs out, he would still end up with less than or equal to 2322.58 dollars.
+Furthermore, the other $y_i$ are indeed zero. As we can see, the value found by the dual problem is the same as the value of the money hidden in the third spot. This spot is also one of the spots which can be searched in its entirety by the thief within the exact allocated time T without being caught by the police. Further analysis of this solution can show that searching a combination of these hiding spots still yields a maximum profit of 1961.08 dollars for the thief. For example, should the thief search the 5th spot completely (the thief can search this spot in its entirety and still have time to search another spot) and the last spot until time runs out, he would still end up with less than or equal to 1961.08 dollars.
 
 The optimal strategy for the thief would be to search position 3 completely (that is, until time runs out) to get the maximum amount of money.
 
@@ -618,7 +480,7 @@ The optimal strategy for the thief would be to search position 3 completely (tha
 \end{exercise}
 
   
- \section{Adversarial Training}
+ \section{Adversarial Training}\label{sec:adv}
   \begin{exercise}{6}
   Write the convex hull of the adversary's feasible set 
   \begin{equation}
@@ -749,8 +611,88 @@ We notice a significant difference between the MEA on the test set against the t
 
  \end{exercise}
 
-  \section*{Appendix}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{doc/images/cross_val_insurance.png}
+  \caption{Cross-validation on parameter $\lambda$ in Lasso regression on insurance data from predictions made by mae penalized regression where $X\in\mathbb{R}^{1338x6}$ i.e., all columns are used to predict the insurance charges. For cross-validation, a 25-75\% split was used.}
+  \vspace{-3mm}
+  \label{fig:cross-val-insurance}
+\end{figure}
+
+\section{Toy example}
+\begin{exercise}{8} (10 points) Apply one of the regression techniques seen in Sections 2 and 5 to a dataset of your choice. Hint: Good sources of datasets
+include Kaggle and the UCI archive. In answering this question, put emphasis
+on interpreting your results and on justifying the chosen optimization scheme.
+
+\begin{figure}[!ht]
+     \centering
+     \begin{subfigure}[b]{1\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{doc/images/bmi.png}
+         \caption{Prediction from bmi}
+         \label{fig:bmi}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{1\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{doc/images/age.png}
+         \caption{Prediction from age. Results from cross-validation on the right. }
+         \label{fig:age}
+     \end{subfigure}
+        \caption{Linear regression to predict insurance charges from bmi or age. On the right, validation error obtained by cross-validation on a 25-75\% split dataset. In red the prediction using mean-absolute-Error penalized regression and in blue using adversarial training. For (b), predictions are the same for both models. }
+        \label{fig:age-bmi-raw}
+\end{figure}
+
+
+\textit{Answer.} As a toy example, we choose the \textit{Medical Cost Personal Datasets} dataset frome Kaggle (\href{https://www.kaggle.com/mirichoi0218/insurance}{link to dataset}). This dataset contains 1338 samples of insurance charges in the U.S distributed across the following columns: 
+\begin{itemize}
+    \item age: age of primary beneficiary
+    \item sex: insurance contractor gender, female, male
+    \item bmi: body mass index, providing an understanding of body
+    \item children: number of children covered by health insurance 
+    \item smoker: smoking ('yes'/'no)
+    \item region: the beneficiary's residential area in the US, northeast, southeast, southwest, northwest.
+    \item charges: individual medical costs billed by health insurance
+\end{itemize}
+Following the same initial steps as in section~\ref{sec:mae} (mean-absolute-error penalized regression), we first tried to predict the individual charges from the rest of the data, so $X\in\mathbb{R}^{1338x6}$. Unfortunately, due to the high variety in data, the predictions are really inaccurate and the error on the validation set high (c.f. Figure~\ref{fig:cross-val-insurance}, approximately \$3000 error). Because of this, we decided to use one-dimensional regression instead, to see if the high-dimensionality and variety of the initial data was the problem.
+
+We predicted the insurance charges from either the age or bmi of clients (Figure~\ref{fig:age-bmi-raw}) using the models from section~\ref{sec:mae} (mae regression) and section~\ref{sec:adv} (adversarial training). The models give similar if not equal results, but predictions are again poor on the validation set. Nevertheless, we still notice some interesting things. 
+
+When predicting fees using the bmi, we see that the smoking habit of clients has a drastic effect on insurance charges, almost splitting the charges into two clusters, where smokers have to pay higher fees (Figure~\ref{fig:bmi}). Regarding the effect of the age, we see that the data are clustered into three linear clusters, the most dense one being the lower one (Figure~\ref{fig:age}). This might explain why the evaluation error is so high for both regressions, as all samples above that lower line might be seen as outliers while they just correspond to another cluster of clients. It might probably be better to do one regression per cluster for this so we took only samples with charges below \$10'000 i.e., the lower line (Figure~\ref{fig:age-cluster-1}). After applying mae penalized regression only to those samples, we see that the validation error is smaller than before (~\$600) and that the prediction now nicely follows the samples. We also notice that there seems to be a separation in insurance fees for this cluster according to the regions clients live in. Regions 3-5 seem to have higher charges than 0-2, so there might be a second interesting dimension in the problem here. In further work we might try predicting charges from the age and region for this cluster. 
+
+We also looked at the smoker/non-smoker clusters from Figure~\ref{fig:bmi}. We separated fees from smokers and non smokers and tried to predict their insurance charges from their bmi (Figure~\ref{fig:bmi-cluster-1}). This time, the problem does not look linear and the errors remain high (~\$4000). Because of their circular form, it might be more advised to use a clustering to predict the charges or apply regression with a kernel. For smokers, by eye we definitely see two clear clusters depending on the bmi of the client.
+
+
+Overall, regression techniques seem to be lacking on this data if it is not pre-processed before. But for linear data such as the fees from the age below \$10'000 it works well.  
+
+
+
+
+\begin{figure}[!ht]
+     \centering
+     \begin{subfigure}[b]{1\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{doc/images/age_cluster.png}
+         \caption{Prediction from age, on charges below \$10'000}
+         \label{fig:age-cluster-1}
+     \end{subfigure}
+         \hfill
+     \begin{subfigure}[b]{1\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{doc/images/smokes_clusters.png}
+         \caption{Prediction from bmi, depending on smoking habit}
+         \label{fig:bmi-cluster-1}
+     \end{subfigure}
+        \caption{Linear regression to predict insurance charges from bmi or age. On the right, validation error obtained by cross-validation on a 25-75\% split dataset. Predictions (in red) were made using the mean-absolute-error penalized regression model. }
+        \label{fig:age-bmi-clusters}
+\end{figure}
+
+
+\end{exercise}
+
+
 \newpage  
+  \section*{Appendix}
  \begin{thebibliography}{9}
 \bibitem{rockafellar1970convex} 
 Rockafellar, R Tyrrell: Convex analysis, 1970, volume 36, Princeton university press
