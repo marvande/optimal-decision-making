@@ -305,9 +305,11 @@ Using the convex hull, we get the following linear program :
 \end{array}
 \end{equation*}
 
-This transforms our Integer LP from before into a standard LP. Solving the new LP with Python, we obtain  the following optimal vertex: $x_1^*=  0.0$ and $x_2^* = 1.0$. So, the extreme points of $conv(X)$ have integer coordinates and are indeed binary. In the lecture, we saw that MILP can be solved by finding an extreme point solution to CMILP which is what has been done here. We saw that this was because the extreme points of $conv(X)$ have integer coordinate and they must be binary because of the original feasible set $X$. If the solution using  
+This transforms our Integer LP from before into a standard LP. Solving the new LP with Python, we obtain  the following optimal vertex: $x_1^*=  0.0$ and $x_2^* = 1.0$. So, the extreme points of $conv(X)$ have integer coordinates and are indeed binary. In the lecture, we saw that MILP can be solved by finding an extreme point solution to CMILP which is what has been done here. Looking at the BFS,  we note that the extreme points of $conv(X)$ have integer coordinate. 
+Moreover, ausing the constraints, the extreme points shall be between zero and one. 
+Thus, using the constraints on the BFS, we can conclude that the optimal decision variable  must be binary. 
 
-\textbf{COMPLETER AVEC BFS}
+%\textbf{COMPLETER AVEC BFS}
 
 %Let $x^{\*}$ be an extreme point %% Ore BSF, need to check 
 %Suppose towards contradiction that there exist a BFS $x^*$ that is not binary. So that exists $x_i^*$ s.t $0< x_i^* < 1 $ 
@@ -530,7 +532,9 @@ convex hull of all integer feasible solutions,
 \begin{exercise}{7}
 
 \begin{enumerate}
-    \item 
+    \item (10 points) Show that the MinMax problem (6) is equivalent to the following linear program. Hint: Use the insights from Sections 3 and 4.
+    
+\textit{Answer}
 
 We want to transform the following Min-Max problem. 
 
@@ -596,13 +600,24 @@ Merging the two minimization we obtain the desired result.
 
 
 
-\item \textit{Implement the linear program (8) in MATLAB or Python using the skeleton code we provide on Moodle and solve it for 50 logarithmically spaced values of in the interval. For each of these values compute the MAE of the corresponding estimator on the validation set, and select the best robust estimator. To assess the beneffts of robust cross validation over standard cross validation, compare the MAE of the robust estimator against the MEA of the estimator found in Question 2.3. In both cases the MEA should be computed on the test set.}
+\item  (10 points) Implement the linear program (8) in MATLAB or Python using the skeleton code we provide on Moodle and solve it for 50 logarithmically spaced values of in the interval. For each of these values compute the MAE of the corresponding estimator on the validation set, and select the best robust estimator. To assess the benefits of robust cross validation over standard cross validation, compare the MAE of the robust estimator against the MEA of the estimator found in Question 2.3. In both cases the MEA should be computed on the test set.
+
+\textit{Answer}
+
+The computations can be found on the Jupyter Notebook. 
+We got and Optimal lambda of $0.004094915062380423$, an optimal value of  $69.85032423411252$ and and optimial MAE on test set of $43.17935492$. Compared with the previous MAE of $46.4249$, we can note an improvement in the result. 
 
 
+\item (5 points) For the robust estimator found above, compare also the MEA on the test set against the MEA on the training set. Is there a significant difference to what you observed in Question 2.3.? Interpret your observations?
 
+\textit{Answer}
 
-\item \textit{For the robust estimator found above, compare also the MEA on the test set against the MEA on the training set. Is there a significant difference to what you observed in Question 2.3.? Interpret your observations?}
+We have : 
 
+\begin{itemize}
+    \item Train MAE : $46.42683699$
+    \item Test MAE : $43.17935492$
+\end{itemize}
 
 We notice a significant difference between the MEA on the test set against the the Training Set. In this adversarial training procedure, we force the outliers to be in the training set.  Thus, it is logical that the MAE of the trainig set is larger than that of the test set. In the previous question, the outliers were evenly distributed between the training and the test, and the model was therefore less robust. 
 
@@ -663,7 +678,7 @@ When predicting fees using the bmi, we see that the smoking habit of clients has
 We also looked at the smoker/non-smoker clusters from Figure~\ref{fig:bmi}. We separated fees from smokers and non smokers and tried to predict their insurance charges from their bmi (Figure~\ref{fig:bmi-cluster-1}). This time, the problem does not look linear and the errors remain high (~\$4000). Because of their circular form, it might be more advised to use a clustering to predict the charges or apply regression with a kernel. For smokers, by eye we definitely see two clear clusters depending on the bmi of the client.
 
 
-Overall, regression techniques seem to be lacking on this data if it is not pre-processed before. But for linear data such as the fees from the age below \$10'000 it works well.  
+Overall, regression techniques seem to be lacking on this data if it is not pre-processed before. But for linear data i.e., our example of predicting fees from the age of clients for fees below \$10'000, it works well.  
 
 
 
