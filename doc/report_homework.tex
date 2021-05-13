@@ -190,7 +190,7 @@ Moodle. Compare the test performance against the training performance.
 We see that the performance on both sets are very close, though the result on the test set is slightly larger, which is to be expected as the model was trained on the other set.
 \end{exercise}
 
-\begin{exercise}{2.3}
+\begin{exercise}{2.3}\label{ex:2.3}
 (5 points)
 Use cross-validation to tune the hyperparameter. Compare again the test performance against the training performance.
 
@@ -216,7 +216,7 @@ Again, performance on both sets are very close, though the result on the test se
 \end{exercise}
 
 
-\section{Convex Hulls}
+\section{Convex Hulls}\label{sec:convex-hulls}
 \begin{exercise}{3}
 
 (5 points). Denote by $X$ the feasible set of Eq.~\ref{eq:lp-2}. Write the
@@ -307,15 +307,13 @@ Using the convex hull, we get the following linear program :
 
 This transforms our Integer LP from before into a standard LP. Solving the new LP with Python, we obtain  the following optimal vertex: $x_1^*=  0.0$ and $x_2^* = 1.0$. So, the extreme points of $conv(X)$ have integer coordinates and are indeed binary. In the lecture, we saw that MILP can be solved by finding an extreme point solution to CMILP which is what has been done here. We saw that this was because the extreme points of $conv(X)$ have integer coordinate and they must be binary because of the original feasible set $X$. If the solution using  
 
-\textbf{COMPLETER AVEC BFS}
-
 %Let $x^{\*}$ be an extreme point %% Ore BSF, need to check 
 %Suppose towards contradiction that there exist a BFS $x^*$ that is not binary. So that exists $x_i^*$ s.t $0< x_i^* < 1 $ 
 %We want to define $y$ and $z$ so they are feasible solutions and $x^* = \frac{1}{2} (y + z) $ which contradicts the fact that $x^* $ is an extreme point. 
 \end{exercise}
   
   
-\section{Zero-Sum Games}
+\section{Zero-Sum Games}\label{sec:zero-sum}
 \begin{exercise}{5.1}
 (3 points) Characterise your decisions variables and feasible set.
 
@@ -489,17 +487,17 @@ The optimal strategy for the thief would be to search position 3 completely (tha
   
   using a finite set of (in-)equalities on $z_i$. Note that k is an integer. Explain why your formulation is indeed the convex hull.
 
-  \textit{Answer:} First of all, we notice that all feasible points (and thus the convex hull) must be in the positive quadrant of $\mathbb{R}^N$ due to the coordinates of $z$ being $z_i \in \{0,1\}$. Furthermore, in the extreme case when $k=N$ then the only feasible point is $z_i = 1^N\in\mathbb{R}^N$ (the vector that is one everywhere). So, in the case of $k=N$, the convex hull is just the point itself (convex by definition). Another special case is when $k=1$ and the vectors $z$ are just the unit vectors $e_i \in\mathbb{R}^N$. In that case, the convex hull is given by the shape delimited by the unit vectors (a line in 2D and a triangle in 3D, Fig.~\ref{fig:convex-hull}). 
+  \textit{Answer:} First of all, we notice that all feasible points (and thus the convex hull) must be in the positive quadrant of $\mathbb{R}^N$ due to the coordinates of $z$ being $z_i \in \{0,1\}$. Furthermore, in the extreme case when $k=N$ then the only feasible point is $z = 1^N\in\mathbb{R}^N$ (the vector that is one everywhere). So, in the case of $k=N$, the convex hull is just the point itself (convex by definition). Another special case is when $k=1$ and the vectors $z$ are just the unit vectors $e_i \in\mathbb{R}^N$. In that case, the convex hull is given by the shape delimited by the unit vectors (a line in 2D and a triangle in 3D, Fig.~\ref{fig:convex-hull}). These shapes are convex by definition.  
   
  \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.5\textwidth]{doc/images/IMG_0038.jpg}
-  \caption{Figure 1: Convex hull of feasible set in 2D and 3D in the case where $k=1$.}
+  \caption{Convex hull of feasible set in 2D and 3D in the case where $k=1$.}
   \vspace{-3mm}
   \label{fig:convex-hull}
 \end{figure}
  
- For the more general case, we first note that, due to the combinatorial properties of the solutions $z\in\mathbb{R}^N$, the set of feasible solutions is finite i.e., because $z$ have to satisfy $\sum_{i=1}^{N}z_i = k$, there is only a finite number of possibilities assuming $N$ is finite. By Weyl's theorem~\cite{rockafellar1970convex}\cite{QUEYRANNE19921}, the convex hull of $Z$ is a convex polyhedron and can thus be defined by a finite set of linear inequalities.
+ For the more general case, we first note that, due to the combinatorial properties of the solutions $z\in\mathbb{R}^N$, the set of feasible solutions is finite i.e., because vectors $z$ have to satisfy $\sum_{i=1}^{N}z_i = k$, there is only a finite number of possibilities assuming $N$ is finite. By Weyl's theorem~\cite{rockafellar1970convex}\cite{QUEYRANNE19921}, the convex hull of $Z$ is a convex polyhedron and can thus be defined by a finite set of linear inequalities.
  
  We define the convex hull by $conv(Z)= \{ z \in\mathbb{R}^N | Az\leq b, z_i \geq 0 \}$ where $A \in\mathbb{R}^{2xN} = \begin{pmatrix}
 1 & 1 & ... & 1\\
@@ -509,32 +507,23 @@ The optimal strategy for the thief would be to search position 3 completely (tha
 
 \begin{equation}
 \begin{array}{l@{}llll}
-&&\text{min}_\theta F(\theta, z)\\
+&&\displaystyle\min_\theta F(\theta, z)\\
 \text{subject to} 
 && \displaystyle\sum_{i=1}^{N}z_i &\leq k & i=1 ,\dots, N \\
 && -\displaystyle\sum_{i=1}^{N}z_i &\leq -k & i=1 ,\dots, N  \\
 && z_i \in \{0,1\} && i=1 ,\dots, N 
 \end{array}
 \end{equation}
-where $F(\theta, z) = max_{z_1, ...z_N} \displaystyle\frac{1}{k} \sum_{i=1}^{N}z_i|y^i-\theta^Tx^i|+\lambda || \theta||_1$. 
-The convex hull as defined above has a finite number of constraints because its bounded by the number of constraints in the ILP, which is finite. The hull is convex by definition of the feasible region. 
-
-
-Notes:
-- linear integer program (LIP), an optimal integer solution is also optimal over the
-convex hull of all integer feasible solutions,
+where $F(\theta, z) = \displaystyle\max_{z_1, ...z_N} \displaystyle\frac{1}{k} \sum_{i=1}^{N}z_i|y^i-\theta^Tx^i|+\lambda || \theta||_1$. 
+The convex hull as defined above has a finite number of constraints because its bounded by the number of constraints in the ILP, which is finite. The hull is convex by definition of the feasible region.
 
  \end{exercise}
  
  
-\begin{exercise}{7}
-
-\begin{enumerate}
-    \item 
-
-We want to transform the following Min-Max problem. 
-
-\begin{equation*}
+\begin{exercise}{7.1}
+Show that the MinMax problem (Eq.~\ref{eq:min-max-adv}) is equivalent to the following linear
+program. Hint: Use the insights from Sections~\ref{sec:convex-hulls} and~\ref{sec:zero-sum}.
+\begin{equation}\label{eq:min-max-adv}
 \begin{array}{lll@{}lll}
 \min\limits_{\theta}&\max\limits_{z_1,...,z_N}  &\frac{1}{k}\displaystyle\sum\limits_{i=1}^{N}z_i|y^{(i)} - \theta^\top x^{(i)}| +  \lambda||\theta||_1 &\\
 \text{subject to} 
@@ -542,13 +531,10 @@ We want to transform the following Min-Max problem.
                 \\
                 && z_i \in  \{ 0, 1 \}   & \forall i \in [ N ]& 
 \end{array}
-\end{equation*}
+\end{equation}
+\textit{Answer.} First, using the solution from Sections~\ref{sec:zero-sum}, we write the dual of the inner maximisation problem using the same logic where we set $\theta$ to a constant: 
 
-
-First, using the solution from Question 3, lets write the dual of the inner minimization problem using the same logic : 
-
-
-\begin{equation*}
+\begin{equation}
 \begin{array}{lll@{}lll}
 &\max\limits_{z_1,...,z_N}  &\frac{1}{k}\displaystyle\sum\limits_{i=1}^{N}z_i|y^{(i)} - \theta^\top x^{(i)}| +  \lambda||\theta||_1 &\\
 \text{subject to} 
@@ -556,30 +542,25 @@ First, using the solution from Question 3, lets write the dual of the inner mini
                 \\
                 && z_i \in  \{ 0, 1 \}   & \forall i \in [ N ]& 
 \end{array}
-\end{equation*}
+\end{equation}
 
-With $p_i$  replaced by $ 1 / k$ and $T$ replaced by $k$ making  $\beta_i$  unconstrained and changing the order of the constraint inequality because of the equality in the maximisation problem  . 
-
-The maximization problem is transformed into : 
+Then, we write its dual as:
 
 \begin{equation*}
 \begin{array}{lll@{}lll}
-&\min\limits_{y}   &  k\beta_{N + 1 }  + \sum\limits_{i=1}^{N}\beta_i  + \lambda||\theta||_1  &\\
+&\displaystyle\min\limits_{y}   &  k\beta_{N + 1 }  + \displaystyle\sum\limits_{i=1}^{N}\beta_i  + \lambda||\theta||_1  &\\
 \text{subject to} 
-
-&&  \beta_{N + 1 } + \beta_i   & \geq \frac{1}{k}|y^{(i)} - \theta^\top x^{(i)}| &  i=1 ,\dots, N \\
+&& \frac{1}{k}|y^{(i)} -\theta^\top x^{(i)}|  \leq  \beta_{N + 1 } + \beta_i&&  i=1 ,\dots, N 
                 \\
-                && y_i    &  \geq 0 % unconstrained& %% ?? Really unconstrained ? 
+                && y_i \geq 0 &&  i=1 ,\dots, N 
 \end{array}
 \end{equation*}
 
-We then assigning $\beta_{N+1} = \alpha$, and as in Exercice 2, we use the fact that $|y_i - \theta^T x_i| \leq \beta_i$ is equivalent to $-\beta_i + \alpha < y_i - \theta^T x_i  < \beta_i + \alpha$ to rewrite the full linear program. 
+From this, we change $\beta_{N+1}$ to $\alpha$, and use the fact that $|y_i - \theta^T x_i| \leq \beta_i$ is equivalent to $-\beta_i < y_i - \theta^T x_i  < \beta_i $ and that we can add $\alpha$ to both sides ($-\beta_i + \alpha < y_i - \theta^T x_i  < \beta_i + \alpha$). The same process is applied to $|\theta_i|$ but with an auxiliary variable $b_i$. 
 
-We also use the same principle for $|\theta_i|$ using $b_i$ as an auxiliary variable. 
+After these steps, we obtain the following program : 
 
-Finally, we obtain the following program : 
-
-\begin{equation*}
+\begin{equation}\label{eq:min-max-lp}
 \begin{array}{lll@{}lll}
  \min\limits_{\theta, b_i} &\min\limits_{\beta. \alpha}   &  k\alpha  + \sum\limits_{i=1}^{N}\beta_i  + \lambda\sum\limits_{i=1}^{d} b_i   &\\
 \text{subject to} 
@@ -590,26 +571,35 @@ Finally, we obtain the following program :
                 && \beta_i    & \geq 0  & \\ %% ?? Really unconstrained ? 
                 && - b_j \leq \theta_j \leq b_j & & j = 1 \dots, d
 \end{array}
-\end{equation*}
+\end{equation}
 
-Merging the two minimization we obtain the desired result. 
-
-
-
-\item \textit{Implement the linear program (8) in MATLAB or Python using the skeleton code we provide on Moodle and solve it for 50 logarithmically spaced values of in the interval. For each of these values compute the MAE of the corresponding estimator on the validation set, and select the best robust estimator. To assess the beneffts of robust cross validation over standard cross validation, compare the MAE of the robust estimator against the MEA of the estimator found in Question 2.3. In both cases the MEA should be computed on the test set.}
-
-
-
-
-\item \textit{For the robust estimator found above, compare also the MEA on the test set against the MEA on the training set. Is there a significant difference to what you observed in Question 2.3.? Interpret your observations?}
-
-
-We notice a significant difference between the MEA on the test set against the the Training Set. In this adversarial training procedure, we force the outliers to be in the training set.  Thus, it is logical that the MAE of the trainig set is larger than that of the test set. In the previous question, the outliers were evenly distributed between the training and the test, and the model was therefore less robust. 
-
-
-\end{enumerate}
+By merging the two minimizations we obtain the desired result. 
 
  \end{exercise}
+ 
+ 
+\begin{exercise}{7.2}
+Implement the linear program~\ref{eq:min-max-lp} in Python and solve it for 50 logarithmically spaced values of in the interval. For each of these values compute the MAE of the corresponding estimator on the validation set, and select the best robust estimator. To assess the benefits of robust cross validation over standard cross validation, compare the MAE of the robust estimator against the MEA of the estimator found in exercise 2.3. In both cases the MEA should be computed on the test set.
+ \end{exercise}
+ 
+ \textit{Answer.} The best parameter from robust cross-validation is $\lambda^* = 0.004094$. This gives the following MAE results: 
+ \begin{itemize}
+     \item Training MAE robust: 46.4268
+     \item Test MAE robust: 43.1793
+ \end{itemize} 
+ Reminder, with standard cross-validation we had: 
+ \begin{itemize}
+     \item Training MAE standard: 42.4461
+     \item Test MAE standard: 46.4249
+ \end{itemize} 
+We see that the robust cross-validation yields a parameter with a smaller MAE loss on the test set than using the standard way. From this, we see that using robust cross-validation is indeed beneficial on this dataset. 
+ 
+\begin{exercise}{7.3}
+For the robust estimator found above, compare also the MEA on the test set against the MEA on the training set. Is there a significant difference to what you observed in Question 2.3.? Interpret your observations?
+
+\textit{Answer.} Interestingly, compared to the standard procedure, robust cross-validation gives a training error higher than the test error which is unusual. But, in adversarial training, outliers are forced to be in the training set. Thus, it is logical that the MAE of the training set is larger than that of the test set. In the previous question, the outliers were evenly distributed between the training and the test, and the model was therefore less robust. 
+ \end{exercise}
+ 
 
 \begin{figure}[!ht]
   \centering
