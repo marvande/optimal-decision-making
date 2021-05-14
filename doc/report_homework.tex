@@ -389,8 +389,8 @@ Assuming that we keep the outer minimisation constant while resolving the inner 
 \displaystyle\max_{z} && \displaystyle\sum\limits_{i=1}^{I} x_ip_iz_i\\
 
 \text{subject to} 
-&& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T &&  \\
                 && z_i  \leq p_i  &&  i=1 ,\dots, I\\
+&& \displaystyle\sum\limits_{i=1}^{I} z_i \leq T &&  \\
                 && z_i\ \geq 0 &&i=1 ,\dots, I\\ 
 
 \end{array}
@@ -407,13 +407,14 @@ We apply the formula that the dual (D) of the primal problem (P):
 
 \end{array}
 \end{equation}
-In our case, we see that we actually start from the dual formulation and would like the primal problem. So, we write $z_i\in\mathbb{R}^{I}$ as our dual variable and $b^T = \begin{pmatrix}x_1p_1 & x_2p_2 & ... &x_Ip_I\end{pmatrix} \in\mathbb{R}^{I}$. Then  $c^T = \begin{pmatrix}T & p_1 & ... &p_I\end{pmatrix}\in\mathbb{R}^{I+1}$ and
+In our case, we see that we actually start from the dual formulation and would like the primal problem. So, we write $z_i\in\mathbb{R}^{I}$ as our dual variable and $b^T = \begin{pmatrix}x_1p_1 & x_2p_2 & ... &x_Ip_I\end{pmatrix} \in\mathbb{R}^{I}$. Then  $c^T = \begin{pmatrix} p_1 & ... &p_I & T\end{pmatrix}\in\mathbb{R}^{I+1}$ and
 \begin{equation*}
     A^T \in\mathbb{R}^{I+1xI} = \begin{pmatrix}
-1 & 1 & ... & 1\\
+
 1 & 0 & ... & 0 \\
 0 & 1 & ... & 0 \\
-0 & 0& ... & 1
+0 & 0& ... & 1 \\
+1 & 1 & ... & 1
 \end{pmatrix}
 \end{equation*}
 
@@ -499,11 +500,15 @@ The optimal strategy for the thief would be to search position 3 completely (tha
  
  For the more general case, we first note that, due to the combinatorial properties of the solutions $z\in\mathbb{R}^N$, the set of feasible solutions is finite i.e., because vectors $z$ have to satisfy $\sum_{i=1}^{N}z_i = k$, there is only a finite number of possibilities assuming $N$ is finite. By Weyl's theorem~\cite{rockafellar1970convex}\cite{QUEYRANNE19921}, the convex hull of $Z$ is a convex polyhedron and can thus be defined by a finite set of linear inequalities.
  
- We define the convex hull by $conv(Z)= \{ z \in\mathbb{R}^N | Az\leq b, z_i \geq 0 \}$ where $A \in\mathbb{R}^{2xN} = \begin{pmatrix}
+ We define the convex hull by $conv(Z)= \{ z \in\mathbb{R}^N | Az\leq b,   z_i \in\{0, 1\} \}$ where 
+\begin{equation*}
+    A \in\mathbb{R}^{2 x N} = \begin{pmatrix}
 1 & 1 & ... & 1\\
--1 & 1 & ... & -1
-\end{pmatrix}$ and $ b = \begin{pmatrix}k\\-k
-\end{pmatrix}$. So, the vertices of the convex hull are the extreme points of the feasible set of the Integer Linear Problem ILP:
+-1 & -1 & ... & -1\\ 
+\end{pmatrix}
+\end{equation*}
+and $ b^T \in \mathbb{R}^{1x2}  = \begin{pmatrix} k, -k 
+\end{pmatrix}$. So the vertices of the convex hull are given by the vertices of the feasible set of the following LP: 
 
 \begin{equation}
 \begin{array}{l@{}llll}
@@ -523,6 +528,11 @@ The convex hull as defined above has a finite number of constraints because its 
 \begin{exercise}{7.1}
 Show that the MinMax problem (Eq.~\ref{eq:min-max-adv}) is equivalent to the following linear
 program. Hint: Use the insights from Sections~\ref{sec:convex-hulls} and~\ref{sec:zero-sum}.
+
+
+\textit{Answer.} 
+
+We want to transform the following integer linear program. 
 \begin{equation}\label{eq:min-max-adv}
 \begin{array}{lll@{}lll}
 \min\limits_{\theta}&\max\limits_{z_1,...,z_N}  &\frac{1}{k}\displaystyle\sum\limits_{i=1}^{N}z_i|y^{(i)} - \theta^\top x^{(i)}| +  \lambda||\theta||_1 &\\
@@ -530,33 +540,65 @@ program. Hint: Use the insights from Sections~\ref{sec:convex-hulls} and~\ref{se
 && \displaystyle\sum\limits_{i=1}^{N}z_i = k  && \\
                 \\
                 && z_i \in  \{ 0, 1 \}   & \forall i \in [ N ]& 
+            
 \end{array}
 \end{equation}
-\textit{Answer.} First, using the solution from Sections~\ref{sec:zero-sum}, we write the dual of the inner maximisation problem using the same logic where we set $\theta$ to a constant: 
+First, using the solution from Sections~\ref{sec:zero-sum}, we write the dual of the inner maximisation problem using the same logic where we set $\theta$ to a constant. We also relax this integer linear program into a linear program, using the convex hull form the previous exercise. %By letting $z_i$ having values between $0$ and $1$, the equality \displaystyle\sum\limits_{i=1}^{N}z_i = k is not guaranteed. 
+
+
 
 \begin{equation}
 \begin{array}{lll@{}lll}
-&\max\limits_{z_1,...,z_N}  &\frac{1}{k}\displaystyle\sum\limits_{i=1}^{N}z_i|y^{(i)} - \theta^\top x^{(i)}| +  \lambda||\theta||_1 &\\
+&\max\limits_{z_1,...,z_N}  &\frac{1}{k}\displaystyle\sum\limits_{i=1}^{N}z_i|y^{(i)} - \theta^\top x^{(i)}| +  \lambda||\theta||_1 \\
 \text{subject to} 
-&& \displaystyle\sum\limits_{i=1}^{N}z_i = k  &&  \\
+%&& \displaystyle\sum\limits_{i=1}^{N}z_i = k  &&  \\
+&& z_i  &\leq 1    & i=1 ,\dots, N
                 \\
-                && z_i \in  \{ 0, 1 \}   & \forall i \in [ N ]& 
+&& \displaystyle\sum_{i=1}^{N}z_i &\leq k & i=1 ,\dots, N \\
+&& -\displaystyle\sum_{i=1}^{N}z_i &\leq -k & i=1 ,\dots, N  \\
+
+                && z_i & \geq  0  & i=1 ,\dots, N 
+
 \end{array}
 \end{equation}
 
-Then, we write its dual as:
+As in Section 2, we start from the dual (D) and write the primal (P): 
+\begin{equation}
+\begin{array}{lll@{}llllll}
+\text{(P)}  &\displaystyle\min_{y}\ &c^Ty && \text{(D)} & \displaystyle\max_{z}\ &b^Tz\\
+&\text{subject to} 
+&b \leq Ay &&&\text{subject to} &A^Tz\leq c\\
+&& y\ \geq 0 &&&&z\ \geq 0\\ 
+
+\end{array}
+\end{equation}
+
+
+Using 
+ $A^T \in\mathbb{R}^{(N + 2) x N} = \begin{pmatrix}
+ 1 & 0 & ... & 0 \\
+ 0 & 1 & ... & 0 \\
+0 & 0& ... & 1 \\
+1 & 1 & ... & 1\\
+-1 & -1 & ... & -1\\ 
+
+\end{pmatrix}$ and $ c \in \mathbb{R}^{(N + 2) x 1}  = \begin{pmatrix} 1 \\ \dots \\ 1 \\ k\\-k \\
+\end{pmatrix}$.
+
+
+We then obtain : 
 
 \begin{equation*}
 \begin{array}{lll@{}lll}
-&\displaystyle\min\limits_{y}   &  k\beta_{N + 1 }  + \displaystyle\sum\limits_{i=1}^{N}\beta_i  + \lambda||\theta||_1  &\\
+&\displaystyle\min\limits_{y}   &  k\beta_{N + 1 }  -  k\beta_{N + 2 } + \displaystyle\sum\limits_{i=1}^{N}\beta_i  + \lambda||\theta||_1  &\\
 \text{subject to} 
-&& \frac{1}{k}|y^{(i)} -\theta^\top x^{(i)}|  \leq  \beta_{N + 1 } + \beta_i&&  i=1 ,\dots, N 
+&& \frac{1}{k}|y^{(i)} -\theta^\top x^{(i)}|  \leq   \beta_{N + 1 }  -  \beta_{N + 2 } + \beta_i&&  i=1 ,\dots, N 
                 \\
                 && y_i \geq 0 &&  i=1 ,\dots, N 
 \end{array}
 \end{equation*}
 
-From this, we change $\beta_{N+1}$ to $\alpha$, and use the fact that $|y_i - \theta^T x_i| \leq \beta_i$ is equivalent to $-\beta_i < y_i - \theta^T x_i  < \beta_i $ and that we can add $\alpha$ to both sides ($-\beta_i + \alpha < y_i - \theta^T x_i  < \beta_i + \alpha$). The same process is applied to $|\theta_i|$ but with an auxiliary variable $b_i$. 
+From this, we change $\beta_{N+1} -\beta_{N+2} $ to $\alpha$, and use the fact that $|y_i - \theta^T x_i| \leq \beta_i$ is equivalent to $-\beta_i < y_i - \theta^T x_i  < \beta_i $ and that we can add $\alpha$ to both sides ($-\beta_i + \alpha < y_i - \theta^T x_i  < \beta_i + \alpha$). The same process is applied to $|\theta_i|$ but with an auxiliary variable $b_i$. 
 
 After these steps, we obtain the following program : 
 

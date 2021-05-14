@@ -544,6 +544,19 @@ program. Hint: Use the insights from Sections~\ref{sec:convex-hulls} and~\ref{se
 \end{array}
 \end{equation}
 
+To simplify finding its dual, we rewrite the linear program as the following: 
+
+\begin{equation}
+\begin{array}{lll@{}lll}
+&\max\limits_{z_1,...,z_N}  &\frac{1}{k}\displaystyle\sum\limits_{i=1}^{N}z_i|y^{(i)} - \theta^\top x^{(i)}| +  \lambda||\theta||_1 &\\
+\text{subject to} 
+&& \displaystyle\sum\limits_{i=1}^{N}z_i \leq k  &&  \\
+&& -\displaystyle\sum\limits_{i=1}^{N}z_i \leq -k  &&  \\
+                \\
+                && z_i \geq 0 & \forall i \in [ N ]& 
+\end{array}
+\end{equation}
+
 Then, we write its dual as:
 
 \begin{equation*}
